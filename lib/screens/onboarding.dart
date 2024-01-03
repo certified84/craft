@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:craft/components/buttons.dart';
 import 'package:vector_graphics/vector_graphics.dart';
-import '../../theme/colors.dart' as futa_map_colors;
+import '../../theme/colors.dart' as craft_colors;
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -28,7 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     return Scaffold(
       body: Container(
-        color: futa_map_colors.Colors.white,
+        color: craft_colors.Colors.white,
         padding: EdgeInsets.symmetric(
           horizontal: _deviceWidth * 0.05,
           vertical: _deviceHeight * .02,
@@ -51,7 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: const Text(
                       "A simple tool to help you optimize your facility layout based on the Computerized Relative Allocation of Facilities Technique.",
                       style: TextStyle(
-                        color: futa_map_colors.Colors.black,
+                        color: craft_colors.Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
@@ -62,8 +62,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       defaultButton(
                         width: _deviceWidth * .8,
                         text: "Continue",
-                        backgroundColor: futa_map_colors.Colors.primary,
-                        textColor: futa_map_colors.Colors.white,
+                        backgroundColor: craft_colors.Colors.primary,
+                        textColor: craft_colors.Colors.white,
                         onPressed: () {
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
@@ -84,7 +84,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         const Text(
                           "By continuing, you agree to our",
                           style: TextStyle(
-                            color: futa_map_colors.Colors.black,
+                            color: craft_colors.Colors.black,
                             fontWeight: FontWeight.normal,
                             fontSize: 14,
                           ),
@@ -96,13 +96,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: futa_map_colors.Colors.primary),
+                                color: craft_colors.Colors.primary),
                           ),
                         ),
                         const Text(
                           "and",
                           style: TextStyle(
-                            color: futa_map_colors.Colors.black,
+                            color: craft_colors.Colors.black,
                             fontWeight: FontWeight.normal,
                             fontSize: 14,
                           ),
@@ -114,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: futa_map_colors.Colors.primary),
+                                color: craft_colors.Colors.primary),
                           ),
                         ),
                       ],

@@ -1,7 +1,9 @@
 import 'package:craft/components/unordered_list.dart';
+import 'package:craft/screens/home.dart';
+import 'package:craft/screens/optimization/facility_information.dart';
 import 'package:flutter/material.dart';
 import 'package:craft/components/buttons.dart';
-import '../../theme/colors.dart' as futa_map_colors;
+import '../../theme/colors.dart' as craft_colors;
 
 class InformationScreen extends StatefulWidget {
   const InformationScreen({super.key});
@@ -25,7 +27,7 @@ class _InformationScreenState extends State<InformationScreen> {
 
     return Scaffold(
       body: Container(
-        color: futa_map_colors.Colors.white,
+        color: craft_colors.Colors.white,
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.only(
@@ -44,7 +46,7 @@ class _InformationScreenState extends State<InformationScreen> {
                     const Text(
                       "Few things to note before using the application:",
                       style: TextStyle(
-                        color: futa_map_colors.Colors.primary,
+                        color: craft_colors.Colors.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -65,12 +67,13 @@ class _InformationScreenState extends State<InformationScreen> {
                     defaultButton(
                       width: _deviceWidth * .8,
                       text: "Get Started",
-                      backgroundColor: futa_map_colors.Colors.primary,
-                      textColor: futa_map_colors.Colors.white,
+                      backgroundColor: craft_colors.Colors.primary,
+                      textColor: craft_colors.Colors.white,
                       onPressed: () {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => const InformationScreen(),
+                            builder: (context) =>
+                                const FacilityInformationScreen(),
                           ),
                           (Route<dynamic> route) => false,
                         );
@@ -80,12 +83,12 @@ class _InformationScreenState extends State<InformationScreen> {
                     defaultOutlinedButton(
                       width: _deviceWidth * .8,
                       text: "Skip",
-                      borderColor: futa_map_colors.Colors.primary,
-                      textColor: futa_map_colors.Colors.primary,
+                      borderColor: craft_colors.Colors.primary,
+                      textColor: craft_colors.Colors.primary,
                       onPressed: () {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => const InformationScreen(),
+                            builder: (context) => const HomeScreen(),
                           ),
                           (Route<dynamic> route) => false,
                         );
