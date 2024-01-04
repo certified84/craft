@@ -4,8 +4,6 @@ import 'package:craft/data/model/facility.dart';
 import 'package:craft/screens/home.dart';
 import 'package:craft/screens/optimization/flow_metric_information.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import '../../theme/colors.dart' as craft_colors;
 
 class FacilityInformationScreen extends StatefulWidget {
@@ -17,6 +15,7 @@ class FacilityInformationScreen extends StatefulWidget {
 
 class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
   late double _deviceHeight, _deviceWidth;
+  final Facility facility = Facility();
 
   @override
   void initState() {
@@ -101,17 +100,19 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                     FacilityInput(
                       hintText: "Enter the facility name",
                       autofocus: true,
-                      onChanged: (p0) => null,
+                      onChanged: (p0) => setState(() => facility.name = p0),
                     ),
                     FacilityInput(
                       hintText: "Enter the number of departments",
                       autofocus: true,
-                      onChanged: (p0) => null,
+                      onChanged: (p0) => setState(
+                          () => facility.numberOfDepartments = int.parse(p0)),
                     ),
                     FacilityInput(
                       hintText: "Enter the total area of the facility",
                       autofocus: true,
-                      onChanged: (p0) => null,
+                      onChanged: (p0) =>
+                          setState(() => facility.totalArea = double.parse(p0)),
                     ),
                   ],
                 ),
@@ -119,12 +120,11 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                   width: _deviceWidth,
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FlowMetricInformationScreen(),
-                    ),
-                  ),
+                  onPressed: () => {
+                    Navigator.pushNamed(
+                        context, FlowMetricInformationScreen.routeName,
+                        arguments: facility),
+                  },
                 )
               ],
             ),

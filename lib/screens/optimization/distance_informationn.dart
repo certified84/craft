@@ -1,23 +1,26 @@
 import 'package:craft/components/buttons.dart';
 import 'package:craft/components/text_field.dart';
+import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
+import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
 import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import '../../theme/colors.dart' as craft_colors;
 
-class CostMetricInformationScreen extends StatefulWidget {
-  const CostMetricInformationScreen({super.key});
+class DistanceInformationScreen extends StatefulWidget {
+  const DistanceInformationScreen({super.key});
+  static const routeName = '/distanceInformationArguments';
 
   @override
-  State<StatefulWidget> createState() => _CostMetricInformationScreenState();
+  State<StatefulWidget> createState() => _DistanceInformationScreenState();
 }
 
-class _CostMetricInformationScreenState
-    extends State<CostMetricInformationScreen> {
+class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   late double _deviceHeight, _deviceWidth;
+  OptimizationArgument optimizationArgument = OptimizationArgument();
+
+  List<DistanceMetric> distanceMetrics = [];
 
   @override
   void initState() {
@@ -28,6 +31,10 @@ class _CostMetricInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+    DistanceArgument? distanceArgument =
+        ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
+    optimizationArgument.distanceArgument = distanceArgument!;
+    Facility facility = distanceArgument.facility!;
 
     return Scaffold(
       body: Container(
@@ -37,15 +44,14 @@ class _CostMetricInformationScreenState
             padding: EdgeInsets.only(
               left: _deviceWidth * 0.05,
               right: _deviceWidth * 0.05,
-              bottom: _deviceHeight * .02,
               top: _deviceHeight * .02,
             ),
             height: _deviceHeight,
             width: _deviceWidth,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +74,7 @@ class _CostMetricInformationScreenState
                       children: [
                         const Expanded(
                           child: Text(
-                            "Enter the cost metric for each department",
+                            "Enter the distance between each department",
                             style: TextStyle(
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
@@ -97,24 +103,31 @@ class _CostMetricInformationScreenState
                         )
                       ],
                     ),
-                    SizedBox(height: _deviceHeight * .05),
-                    FacilityInput(
-                      hintText: "Enter the facility name",
-                      autofocus: true,
-                      onChanged: (p0) => null,
+                    const SizedBox(height: 8),
+                    const Text(
+                      "If there are no distances, enter 0. E.g A to A = 0",
+                      style: TextStyle(fontSize: 14),
                     ),
-                    FacilityInput(
-                      hintText: "Enter the number of departments",
-                      autofocus: true,
-                      onChanged: (p0) => null,
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the total area of the facility",
-                      autofocus: true,
-                      onChanged: (p0) => null,
-                    ),
+                    SizedBox(height: _deviceHeight * .025),
                   ],
                 ),
+                SizedBox(height: _deviceHeight * .025),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      for (int i = 0; i < facility.numberOfDepartments!; i++)
+                        for (int j = 0; j < facility.numberOfDepartments!; j++)
+                          FacilityInput(
+                            hintText:
+                                "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
+                            autofocus: true,
+                            onChanged: (p0) => null,
+                          ),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",

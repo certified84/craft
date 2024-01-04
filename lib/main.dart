@@ -1,3 +1,6 @@
+import 'package:craft/screens/optimization/distance_informationn.dart';
+import 'package:craft/screens/optimization/flow_metric_information.dart';
+import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:craft/screens/onboarding.dart';
@@ -24,8 +27,12 @@ class App extends StatelessWidget {
       ),
       home: home,
       routes: {
-        // PlaceDetailScreen.routeName: (context) => const PlaceDetailScreen(),
-        // NavigationScreen.routeName: (context) => const NavigationScreen(),
+        FlowMetricInformationScreen.routeName: (context) =>
+            const FlowMetricInformationScreen(),
+        DistanceInformationScreen.routeName: (context) =>
+            const DistanceInformationScreen(),
+        OptimizationInformationScreen.routeName: (context) =>
+            const OptimizationInformationScreen(),
       },
     );
   }

@@ -24,7 +24,7 @@ class OptimizationComponent extends StatelessWidget {
           Expanded(
             child: Text(
               "Swapping Department ${optimization.i} with ${optimization.j}, gave a total score of ${optimization.score}",
-              style: TextStyle(fontWeight: FontWeight.w400),
+              style: const TextStyle(fontWeight: FontWeight.w400),
             ),
           )
         ],

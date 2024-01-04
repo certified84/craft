@@ -1,13 +1,13 @@
 class Facility {
-  String id;
-  String name;
-  int numberOfDepartments;
-  double totalArea;
-  double initialScore;
-  double optimizedScore;
-  List<Optimization> optimizations;
+  String? id;
+  String? name;
+  int? numberOfDepartments;
+  double? totalArea;
+  double? initialScore;
+  double? optimizedScore;
+  List<Optimization>? optimizations;
 
-  Facility(
+  Facility({
     this.id,
     this.name,
     this.numberOfDepartments,
@@ -15,17 +15,17 @@ class Facility {
     this.initialScore,
     this.optimizedScore,
     this.optimizations,
-  );
+  });
 
   factory Facility.fromMap(Map map) {
     Facility item = Facility(
-      map['id'],
-      map['name'],
-      map['numberOfDepartments'],
-      map['totalArea'],
-      map['initialScore'],
-      map['optimizedScore'],
-      map['optimizations'],
+      id: map['id'],
+      name: map['name'],
+      numberOfDepartments: map['numberOfDepartments'],
+      totalArea: map['totalArea'],
+      initialScore: map['initialScore'],
+      optimizedScore: map['optimizedScore'],
+      optimizations: map['optimizations'],
     );
     return item;
   }

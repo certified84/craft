@@ -1,15 +1,15 @@
 import 'package:craft/components/buttons.dart';
 import 'package:craft/components/text_field.dart';
+import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
 import 'package:craft/screens/home.dart';
-import 'package:craft/screens/optimization/cost_metric_information%20copy.dart';
+import 'package:craft/screens/optimization/distance_informationn.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import '../../theme/colors.dart' as craft_colors;
 
 class FlowMetricInformationScreen extends StatefulWidget {
   const FlowMetricInformationScreen({super.key});
+  static const routeName = '/flowMetricsArguments';
 
   @override
   State<StatefulWidget> createState() => _FlowMetricInformationScreenState();
@@ -18,6 +18,9 @@ class FlowMetricInformationScreen extends StatefulWidget {
 class _FlowMetricInformationScreenState
     extends State<FlowMetricInformationScreen> {
   late double _deviceHeight, _deviceWidth;
+  DistanceArgument distanceArgument = DistanceArgument();
+
+  List<FlowMetric> flowMetrics = [];
 
   @override
   void initState() {
@@ -28,6 +31,9 @@ class _FlowMetricInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+    Facility? facility =
+        ModalRoute.of(context)!.settings.arguments as Facility?;
+    distanceArgument.facility = facility;
 
     return Scaffold(
       body: Container(
@@ -37,15 +43,14 @@ class _FlowMetricInformationScreenState
             padding: EdgeInsets.only(
               left: _deviceWidth * 0.05,
               right: _deviceWidth * 0.05,
-              bottom: _deviceHeight * .02,
               top: _deviceHeight * .02,
             ),
             height: _deviceHeight,
             width: _deviceWidth,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +73,7 @@ class _FlowMetricInformationScreenState
                       children: [
                         const Expanded(
                           child: Text(
-                            "Enter the flow metric for each department",
+                            "Enter the flow metric between each department",
                             style: TextStyle(
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
@@ -97,34 +102,40 @@ class _FlowMetricInformationScreenState
                         )
                       ],
                     ),
-                    SizedBox(height: _deviceHeight * .05),
-                    FacilityInput(
-                      hintText: "Enter the facility name",
-                      autofocus: true,
-                      onChanged: (p0) => null,
+                    const SizedBox(height: 8),
+                    const Text(
+                      "If there are no metrics, enter 0. E.g A to A = 0",
+                      style: TextStyle(fontSize: 14),
                     ),
-                    FacilityInput(
-                      hintText: "Enter the number of departments",
-                      autofocus: true,
-                      onChanged: (p0) => null,
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the total area of the facility",
-                      autofocus: true,
-                      onChanged: (p0) => null,
-                    ),
+                    SizedBox(height: _deviceHeight * .025),
                   ],
                 ),
+                SizedBox(height: _deviceHeight * .025),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      for (int i = 0; i < facility!.numberOfDepartments!; i++)
+                        for (int j = 0; j < facility.numberOfDepartments!; j++)
+                          FacilityInput(
+                            hintText:
+                                "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
+                            autofocus: true,
+                            onChanged: (p0) => null,
+                          ),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CostMetricInformationScreen(),
-                    ),
-                  ),
+                  onPressed: () => {
+                    Navigator.pushNamed(
+                        context, DistanceInformationScreen.routeName,
+                        arguments: distanceArgument),
+                  },
                 )
               ],
             ),

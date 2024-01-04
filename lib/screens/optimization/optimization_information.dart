@@ -1,16 +1,14 @@
 import 'package:craft/components/buttons.dart';
 import 'package:craft/components/optimization.dart';
-import 'package:craft/components/text_field.dart';
 import 'package:craft/data/model/facility.dart';
+import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
-import 'package:craft/screens/optimization/cost_metric_information%20copy.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import '../../theme/colors.dart' as craft_colors;
 
 class OptimizationInformationScreen extends StatefulWidget {
   const OptimizationInformationScreen({super.key});
+  static const routeName = '/optimizationInformationArguments';
 
   @override
   State<StatefulWidget> createState() => _OptimizationInformationScreenState();
@@ -25,6 +23,7 @@ class _OptimizationInformationScreenState
     Optimization(3460, "C", "B"),
     Optimization(2190, "A", "D"),
   ];
+  OptimizationArgument? optimizationArgument;
 
   @override
   void initState() {
@@ -35,6 +34,8 @@ class _OptimizationInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+    optimizationArgument =
+        ModalRoute.of(context)!.settings.arguments as OptimizationArgument?;
 
     return Scaffold(
       body: Container(
