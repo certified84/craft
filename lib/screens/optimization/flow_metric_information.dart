@@ -3,7 +3,7 @@ import 'package:craft/components/text_field.dart';
 import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
 import 'package:craft/screens/home.dart';
-import 'package:craft/screens/optimization/distance_informationn.dart';
+import 'package:craft/screens/optimization/distance_information.dart';
 import 'package:flutter/material.dart';
 import '../../theme/colors.dart' as craft_colors;
 
@@ -20,20 +20,35 @@ class _FlowMetricInformationScreenState
   late double _deviceHeight, _deviceWidth;
   DistanceArgument distanceArgument = DistanceArgument();
 
-  List<FlowMetric> flowMetrics = [];
+  late Facility? facility;
+  List<List<FlowMetric>>? flowMetrics;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    facility = ModalRoute.of(context)!.settings.arguments as Facility?;
+    distanceArgument.facility = facility!;
+    int numberOfDepartments = facility?.numberOfDepartments ?? 0;
+    flowMetrics = List.generate(
+        numberOfDepartments,
+        (_) => List<FlowMetric>.filled(
+            numberOfDepartments, FlowMetric("A", "B", "0")));
+    for (int i = 0; i < numberOfDepartments; i++) {
+      for (int j = 0; j < numberOfDepartments; j++) {
+        flowMetrics?[i][j] = FlowMetric(
+            String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    Facility? facility =
-        ModalRoute.of(context)!.settings.arguments as Facility?;
-    distanceArgument.facility = facility;
+    int numberOfDepartments = facility?.numberOfDepartments ?? 0;
+    // Facility? facility =
+    //     ModalRoute.of(context)!.settings.arguments as Facility?;
+    // distanceArgument.facility = facility!;
 
     return Scaffold(
       body: Container(
@@ -112,26 +127,30 @@ class _FlowMetricInformationScreenState
                 ),
                 SizedBox(height: _deviceHeight * .025),
                 Expanded(
-                  child: ListView(
-                    children: [
-                      for (int i = 0; i < facility!.numberOfDepartments!; i++)
-                        for (int j = 0; j < facility.numberOfDepartments!; j++)
-                          FacilityInput(
-                            hintText:
-                                "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
-                            autofocus: true,
-                            onChanged: (p0) => null,
-                          ),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
-                ),
+                    child: ListView(
+                  children: [
+                    for (int i = 0; i < numberOfDepartments; i++)
+                      for (int j = 0; j < numberOfDepartments; j++)
+                        i == j
+                            ? Container()
+                            : FacilityInput(
+                                hintText:
+                                    "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
+                                autofocus: i + j == 1,
+                                onChanged: (p0) => {
+                                  setState(() => flowMetrics?[i][j].metric = p0)
+                                },
+                              ),
+                    const SizedBox(height: 40),
+                  ],
+                )),
                 const SizedBox(height: 15),
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
+                    setState(() => distanceArgument.flowMetrics = flowMetrics),
                     Navigator.pushNamed(
                         context, DistanceInformationScreen.routeName,
                         arguments: distanceArgument),

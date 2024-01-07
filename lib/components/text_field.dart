@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart' as craft_colors;
 
 class FacilityInput extends StatelessWidget {
-  const FacilityInput({
-    super.key,
-    this.hintText,
-    this.value,
-    this.autofocus,
-    this.onChanged,
-  });
+  const FacilityInput(
+      {super.key,
+      this.hintText,
+      this.value,
+      this.autofocus,
+      this.onChanged,
+      this.onEditingComplete});
   final String? hintText;
   final String? value;
   final Function(String)? onChanged;
+  final void Function()? onEditingComplete;
   final bool? autofocus;
 
   @override
@@ -26,8 +27,9 @@ class FacilityInput extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: TextFormField(
-        autofocus: true,
+        autofocus: autofocus ?? false,
         cursorColor: craft_colors.Colors.primary,
+        onEditingComplete: onEditingComplete,
         decoration: InputDecoration(
           icon: Container(
             width: 15,

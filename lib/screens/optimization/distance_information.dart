@@ -20,7 +20,8 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   late double _deviceHeight, _deviceWidth;
   OptimizationArgument optimizationArgument = OptimizationArgument();
 
-  List<DistanceMetric> distanceMetrics = [];
+  late DistanceArgument? distanceArgument;
+  List<List<DistanceMetric>>? distanceMetrics;
 
   @override
   void initState() {
@@ -28,13 +29,35 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    distanceArgument =
+        ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
+    optimizationArgument.distanceArgument = distanceArgument!;
+    int numberOfDepartments =
+        distanceArgument?.facility?.numberOfDepartments ?? 0;
+    distanceMetrics = List.generate(
+        numberOfDepartments,
+        (_) => List<DistanceMetric>.filled(
+            numberOfDepartments, DistanceMetric("A", "B", "0")));
+    for (int i = 0; i < numberOfDepartments; i++) {
+      for (int j = 0; j < numberOfDepartments; j++) {
+        distanceMetrics?[i][j] = DistanceMetric(
+            String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    DistanceArgument? distanceArgument =
-        ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
-    optimizationArgument.distanceArgument = distanceArgument!;
-    Facility facility = distanceArgument.facility!;
+    int numberOfDepartments =
+        distanceArgument?.facility?.numberOfDepartments ?? 0;
+    // DistanceArgument? distanceArgument =
+    //     ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
+    // optimizationArgument.distanceArgument = distanceArgument!;
+    // Facility facility = distanceArgument.facility!;
 
     return Scaffold(
       body: Container(
@@ -115,14 +138,19 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                 Expanded(
                   child: ListView(
                     children: [
-                      for (int i = 0; i < facility.numberOfDepartments!; i++)
-                        for (int j = 0; j < facility.numberOfDepartments!; j++)
-                          FacilityInput(
-                            hintText:
-                                "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
-                            autofocus: true,
-                            onChanged: (p0) => null,
-                          ),
+                      for (int i = 0; i < numberOfDepartments; i++)
+                        for (int j = 0; j < numberOfDepartments; j++)
+                          i == j
+                              ? Container()
+                              : FacilityInput(
+                                  hintText:
+                                      "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
+                                  autofocus: true,
+                                  onChanged: (p0) => {
+                                    setState(() =>
+                                        distanceMetrics?[i][j].metric = p0)
+                                  },
+                                ),
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -132,13 +160,25 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                   width: _deviceWidth,
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const OptimizationInformationScreen(),
+                  onPressed: () => {
+                    setState(
+                      () => optimizationArgument.distanceMetrics =
+                          distanceMetrics,
                     ),
-                  ),
+                    for (int i = 0;
+                        i < distanceArgument!.facility!.numberOfDepartments!;
+                        i++)
+                      for (int j = 0;
+                          j < distanceArgument!.facility!.numberOfDepartments!;
+                          j++)
+                        debugPrint(
+                            "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics?[i][j].metric}"),
+                    Navigator.pushNamed(
+                      context,
+                      OptimizationInformationScreen.routeName,
+                      arguments: optimizationArgument,
+                    ),
+                  },
                 )
               ],
             ),

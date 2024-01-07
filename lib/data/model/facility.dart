@@ -1,3 +1,6 @@
+import 'package:craft/data/model/distance.dart';
+import 'package:craft/data/model/optimization.dart';
+
 class Facility {
   String? id;
   String? name;
@@ -52,5 +55,15 @@ class Optimization {
     this.score,
     this.i,
     this.j,
+  );
+}
+
+class FacilityLayout {
+  List<List<DistanceMetric>> distanceMetrics;
+  List<List<FlowMetric>> flowMetrics;
+
+  FacilityLayout(
+    this.distanceMetrics,
+    this.flowMetrics,
   );
 }

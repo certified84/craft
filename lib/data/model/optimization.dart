@@ -2,7 +2,7 @@ import 'package:craft/data/model/distance.dart';
 
 class OptimizationArgument {
   DistanceArgument? distanceArgument;
-  List<DistanceMetric>? distanceMetrics;
+  List<List<DistanceMetric>>? distanceMetrics;
 
   OptimizationArgument({this.distanceArgument, this.distanceMetrics});
 
@@ -25,7 +25,7 @@ class OptimizationArgument {
 class DistanceMetric {
   String i;
   String j;
-  double metric;
+  String metric;
 
   DistanceMetric(
     this.i,

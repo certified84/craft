@@ -2,7 +2,7 @@ import 'package:craft/data/model/facility.dart';
 
 class DistanceArgument {
   Facility? facility;
-  List<FlowMetric>? flowMetrics;
+  List<List<FlowMetric>>? flowMetrics;
 
   DistanceArgument({this.facility, this.flowMetrics});
 
@@ -25,7 +25,7 @@ class DistanceArgument {
 class FlowMetric {
   String i;
   String j;
-  double metric;
+  String metric;
 
   FlowMetric(
     this.i,
