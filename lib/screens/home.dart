@@ -7,6 +7,7 @@ import '../../theme/colors.dart' as craft_colors;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+  static const routeName = '/';
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();

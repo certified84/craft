@@ -121,9 +121,12 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
-                    Navigator.pushNamed(
-                        context, FlowMetricInformationScreen.routeName,
-                        arguments: facility),
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      FlowMetricInformationScreen.routeName,
+                      ModalRoute.withName('/'),
+                      arguments: facility,
+                    ),
                   },
                 )
               ],

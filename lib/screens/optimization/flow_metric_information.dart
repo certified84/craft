@@ -151,9 +151,16 @@ class _FlowMetricInformationScreenState
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
                     setState(() => distanceArgument.flowMetrics = flowMetrics),
-                    Navigator.pushNamed(
-                        context, DistanceInformationScreen.routeName,
-                        arguments: distanceArgument),
+                    for (int i = 0; i < facility!.numberOfDepartments!; i++)
+                      for (int j = 0; j < facility!.numberOfDepartments!; j++)
+                        debugPrint(
+                            "Flow Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${flowMetrics?[i][j].metric}"),
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      DistanceInformationScreen.routeName,
+                      ModalRoute.withName('/'),
+                      arguments: distanceArgument,
+                    ),
                   },
                 )
               ],

@@ -1,7 +1,6 @@
 import 'package:craft/components/buttons.dart';
 import 'package:craft/components/text_field.dart';
 import 'package:craft/data/model/distance.dart';
-import 'package:craft/data/model/facility.dart';
 import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
 import 'package:craft/screens/optimization/optimization_information.dart';
@@ -173,9 +172,10 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                           j++)
                         debugPrint(
                             "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics?[i][j].metric}"),
-                    Navigator.pushNamed(
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
                       OptimizationInformationScreen.routeName,
+                      ModalRoute.withName('/'),
                       arguments: optimizationArgument,
                     ),
                   },

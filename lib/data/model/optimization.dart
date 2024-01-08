@@ -32,4 +32,9 @@ class DistanceMetric {
     this.j,
     this.metric,
   );
+
+  @override
+  String toString() {
+    return "Distance Metric: $i, $j, $metric";
+  }
 }
