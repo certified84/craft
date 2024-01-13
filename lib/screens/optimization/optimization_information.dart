@@ -18,11 +18,94 @@ class _OptimizationInformationScreenState
     extends State<OptimizationInformationScreen> {
   late double _deviceHeight, _deviceWidth;
   List<Optimization>? optimizations;
+
   OptimizationArgument? optimizationArgument;
+  List<List<Metric>> distanceMetrics = [];
+
+  List<List<Department>> positions = [];
+  List<List<Department>> centroids = [];
+
+  int numberOfDepartments = 0, rows = 0, columns = 0;
+  double length = 0, breadth = 0, initialScore = 0;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    optimizationArgument =
+        ModalRoute.of(context)!.settings.arguments as OptimizationArgument?;
+
+    // Define the variables needed
+    rows = optimizationArgument?.facility?.rows ?? 0;
+    columns = optimizationArgument?.facility?.columns ?? 0;
+    numberOfDepartments = rows * columns;
+
+    length = optimizationArgument?.facility?.length ?? 0;
+    breadth = optimizationArgument?.facility?.breadth ?? 0;
+
+    // Generate default values for the arrays
+    positions = List.generate(rows,
+        (_) => List<Department>.filled(columns, Department("A", "0", "0")));
+
+    centroids = List.generate(rows,
+        (_) => List<Department>.filled(columns, Department("A", "0", "0")));
+
+    distanceMetrics = List.generate(numberOfDepartments,
+        (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "0")));
+
+    // Update the values of the positions as required
+    int initial = 0;
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        positions[i][j] =
+            (Department(String.fromCharCode(65 + initial++), "$i", "$j"));
+      }
+    }
+
+    double intialCentroidX = length / 2.0;
+    double intialCentroidY = breadth / 2.0;
+    initial = 0;
+
+    // Obtain the Centroid for each department as required
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        Department department = positions[i][j];
+        centroids[i][j] = (Department(
+            String.fromCharCode(65 + initial++),
+            "${int.parse(department.j) * length + intialCentroidX}",
+            "${int.parse(department.i) * breadth + intialCentroidY}"));
+      }
+    }
+
+    // Calculate the distace between each department
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        var currentElement = centroids[i][j];
+        for (int k = 0; k < rows; k++) {
+          for (int l = 0; l < columns; l++) {
+            var otherElement = centroids[k][l];
+            var distance = (double.parse(currentElement.i) -
+                        double.parse(otherElement.i))
+                    .abs() +
+                (double.parse(currentElement.j) - double.parse(otherElement.j))
+                    .abs();
+            distanceMetrics[i * columns + j][k * columns + l] = Metric(
+              currentElement.name,
+              otherElement.name,
+              "$distance",
+            );
+          }
+        }
+      }
+    }
+
+    setState(() {
+      optimizationArgument?.distanceMetrics = distanceMetrics;
+    });
   }
 
   @override
@@ -55,7 +138,7 @@ class _OptimizationInformationScreenState
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.generate(
-                              4,
+                              3,
                               (index) => Expanded(
                                 child: Container(
                                   margin:
@@ -109,7 +192,7 @@ class _OptimizationInformationScreenState
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: List.generate(
-                                  4,
+                                  3,
                                   (index) => Expanded(
                                     child: Container(
                                       margin: EdgeInsets.only(
@@ -129,9 +212,14 @@ class _OptimizationInformationScreenState
                                   fontSize: 20,
                                 ),
                               ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Initial score: $initialScore",
+                                style: const TextStyle(fontSize: 14),
+                              ),
                               SizedBox(height: _deviceHeight * .05),
                               const Text(
-                                "You layout is already the a most optimized layout. Click the button below to finish",
+                                "Your layout is already the a most optimized layout. Click the button below to finish",
                                 style: TextStyle(
                                   color: craft_colors.Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -164,7 +252,7 @@ class _OptimizationInformationScreenState
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: List.generate(
-                                  4,
+                                  3,
                                   (index) => Expanded(
                                     child: Container(
                                       margin: EdgeInsets.only(
@@ -183,6 +271,11 @@ class _OptimizationInformationScreenState
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                 ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Initial score: $initialScore",
+                                style: const TextStyle(fontSize: 14),
                               ),
                               SizedBox(height: _deviceHeight * .05),
                               const Text(
@@ -230,43 +323,72 @@ class _OptimizationInformationScreenState
 
   Future<List<Optimization>> _optimizeLayout(OptimizationArgument argument) {
     List<Optimization> optimizations = [];
-    int numberOfDepartments =
-        argument.distanceArgument!.facility!.numberOfDepartments!;
     var facilityLayout = FacilityLayout(
       argument.distanceMetrics!,
-      argument.distanceArgument!.flowMetrics!,
+      argument.flowMetrics!,
     );
-    var improved = false;
+
     var prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
-    debugPrint("Prev: $prev");
+    initialScore = prev;
+
+    int maxIterations = 1000;
+    bool improved = false;
+    for (int k = 0; k < maxIterations; k++) {
+      for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns - 1; j++) {
+          var newLayout = _swapCentroids(i, j, i, j + 1, argument);
+          var newObjective =
+              _calculateObjectiveFunction(newLayout, numberOfDepartments);
+
+          debugPrint("Prev $prev, New: $newObjective");
+
+          if (newObjective < prev) {
+            debugPrint("Improved: Prev $prev, New: $newObjective");
+            optimizations.add(
+              Optimization(
+                newObjective,
+                facilityLayout.distanceMetrics[i][j].i,
+                newLayout.distanceMetrics[i][j].i,
+              ),
+            );
+            prev = newObjective;
+            facilityLayout = newLayout;
+            improved = true;
+          }
+        }
+      }
+      if (!improved) {
+        break;
+      }
+    }
 
     // int maxIterations = 1000;
     // for (int k = 0; k < maxIterations; k++) {
-    for (int i = 0; i < numberOfDepartments; i++) {
-      for (int j = 0; j < numberOfDepartments - 1; j++) {
-        // if (i == j || i == j + 1) continue;
-        var newLayout = _swapDepartments(i, j, i, j + 1, argument);
-        var newObjective =
-            _calculateObjectiveFunction(newLayout, numberOfDepartments);
-        // debugPrint("Prev: $prev");
-        // debugPrint("New: $newObjective");
+    // for (int i = 0; i < numberOfDepartments; i++) {
+    //   for (int j = 0; j < numberOfDepartments - 1; j++) {
+    //     // if (i == j || i == j + 1) continue;
+    //     var newLayout = _swapDepartments(i, j, i, j + 1, argument);
+    //     var newObjective =
+    //         _calculateObjectiveFunction(newLayout, numberOfDepartments);
+    //     // debugPrint("Prev: $prev");
+    //     // debugPrint("New: $newObjective");
 
-        facilityLayout.distanceMetrics[0][0].i;
-        if (newObjective < prev) {
-          // debugPrint("Improved: Prev $prev, New: $newObjective");
-          // optimizations.add(
-          //   Optimization(
-          //     newObjective,
-          //     facilityLayout.distanceMetrics[i][j].i,
-          //     newLayout.distanceMetrics[i][j].i,
-          //   ),
-          // );
-          prev = newObjective;
-          facilityLayout = newLayout;
-          improved = true;
-        }
-      }
-    }
+    //     facilityLayout.distanceMetrics[0][0].i;
+    //     if (newObjective < prev) {
+    //       // debugPrint("Improved: Prev $prev, New: $newObjective");
+    //       // optimizations.add(
+    //       //   Optimization(
+    //       //     newObjective,
+    //       //     facilityLayout.distanceMetrics[i][j].i,
+    //       //     newLayout.distanceMetrics[i][j].i,
+    //       //   ),
+    //       // );
+    //       prev = newObjective;
+    //       facilityLayout = newLayout;
+    //       improved = true;
+    //     }
+    //   }
+    // }
 
     // prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
 
@@ -296,10 +418,67 @@ class _OptimizationInformationScreenState
     return Future.value(optimizations);
   }
 
+  FacilityLayout _swapCentroids(
+      int i1, int j1, int i2, int j2, OptimizationArgument argument) {
+    var newLayout =
+        FacilityLayout(argument.distanceMetrics!, argument.flowMetrics!);
+
+    var newCentroids = centroids;
+    var centroidTemp = newCentroids[i1][j1];
+
+    // debugPrint("Swapping $i1, $j1 with $i2, $j2: Before");
+    // debugPrint("Centroid[$i1, $j1]: ${centroids[i1][j1]}");
+    // debugPrint("Centroid[$i2, $j2]: ${centroids[i2][j2]}\n");
+
+    newCentroids[i1][j1] = newCentroids[i2][j2];
+    newCentroids[i2][j2] = centroidTemp;
+
+    // debugPrint("Swapping $i1, $j1 with $i2, $j2: After");
+    // debugPrint("Centroid[$i1, $j1]: ${centroids[i1][j1]}");
+    // debugPrint("Centroid[$i2, $j2]: ${centroids[i2][j2]}\n\n");
+    newLayout.distanceMetrics =
+        _calculateNewDistances(rows, columns, newCentroids);
+
+    return newLayout;
+  }
+
+  List<List<Metric>> _calculateNewDistances(
+    int rows,
+    int columns,
+    List<List<Department>> newCentroids,
+  ) {
+    List<List<Metric>> newDistanceMetric = [];
+    newDistanceMetric = List.generate(rows * columns,
+        (_) => List<Metric>.filled(rows * columns, Metric("A", "B", "0")));
+
+    // Calculate the distace between each department
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        var currentElement = newCentroids[i][j];
+        for (int k = 0; k < rows; k++) {
+          for (int l = 0; l < columns; l++) {
+            var otherElement = newCentroids[k][l];
+            var distance = (double.parse(currentElement.i) -
+                        double.parse(otherElement.i))
+                    .abs() +
+                (double.parse(currentElement.j) - double.parse(otherElement.j))
+                    .abs();
+            newDistanceMetric[i * columns + j][k * columns + l] = Metric(
+              currentElement.name,
+              otherElement.name,
+              "$distance",
+            );
+          }
+        }
+      }
+    }
+    return newDistanceMetric;
+  }
+
   FacilityLayout _swapDepartments(
       int i1, int j1, int i2, int j2, OptimizationArgument argument) {
-    var newLayout = FacilityLayout(
-        argument.distanceMetrics!, argument.distanceArgument!.flowMetrics!);
+    var newLayout =
+        FacilityLayout(argument.distanceMetrics!, argument.flowMetrics!);
     var distanceMetricTemp = newLayout.distanceMetrics[i1][j1];
 
     debugPrint("Swapping $i1, $j1 with $i2, $j2: Before");

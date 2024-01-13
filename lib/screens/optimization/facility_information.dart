@@ -49,7 +49,7 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: List.generate(
-                        4,
+                        3,
                         (index) => Expanded(
                           child: Container(
                             margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
@@ -101,12 +101,6 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                       hintText: "Enter the facility name",
                       autofocus: true,
                       onChanged: (p0) => setState(() => facility.name = p0),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the number of departments",
-                      autofocus: true,
-                      onChanged: (p0) => setState(
-                          () => facility.numberOfDepartments = int.parse(p0)),
                     ),
                     FacilityInput(
                       hintText: "Enter the total area of the facility",

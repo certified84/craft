@@ -1,25 +1,26 @@
-import 'package:craft/data/model/distance.dart';
+import 'package:craft/data/model/facility.dart';
 
 class OptimizationArgument {
-  DistanceArgument? distanceArgument;
+  Facility? facility;
+  List<List<Metric>>? flowMetrics;
   List<List<Metric>>? distanceMetrics;
 
-  OptimizationArgument({this.distanceArgument, this.distanceMetrics});
+  OptimizationArgument({this.facility, this.flowMetrics, this.distanceMetrics});
 
-  factory OptimizationArgument.fromMap(Map map) {
-    OptimizationArgument item = OptimizationArgument(
-      distanceArgument: map['facility'],
-      distanceMetrics: map['distanceMetrics'],
-    );
-    return item;
-  }
+  // factory OptimizationArgument.fromMap(Map map) {
+  //   OptimizationArgument item = OptimizationArgument(
+  //     facility: map['facility'],
+  //     distanceMetrics: map['distanceMetrics'],
+  //   );
+  //   return item;
+  // }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'distanceArgument': distanceArgument,
-      'distanceMetrics': distanceMetrics,
-    };
-  }
+  // Map<String, dynamic> toMap() {
+  //   return {
+  //     'distanceArgument': distanceArgument,
+  //     'distanceMetrics': distanceMetrics,
+  //   };
+  // }
 }
 
 class Metric {

@@ -1,10 +1,9 @@
 import 'package:craft/components/buttons.dart';
 import 'package:craft/components/text_field.dart';
-import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
 import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
-import 'package:craft/screens/optimization/distance_information.dart';
+import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
 import '../../theme/colors.dart' as craft_colors;
 
@@ -19,19 +18,22 @@ class FlowMetricInformationScreen extends StatefulWidget {
 class _FlowMetricInformationScreenState
     extends State<FlowMetricInformationScreen> {
   late double _deviceHeight, _deviceWidth;
-  DistanceArgument distanceArgument = DistanceArgument();
+  OptimizationArgument optimizationArgument = OptimizationArgument();
 
   late Facility? facility;
   List<List<Metric>>? flowMetrics;
+  int numberOfDepartments = 0;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     facility = ModalRoute.of(context)!.settings.arguments as Facility?;
-    distanceArgument.facility = facility!;
-    int numberOfDepartments = facility?.numberOfDepartments ?? 0;
+    optimizationArgument.facility = facility!;
+    numberOfDepartments = facility!.rows! * facility!.columns!;
     flowMetrics = List.generate(numberOfDepartments,
         (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "0")));
+
     for (int i = 0; i < numberOfDepartments; i++) {
       for (int j = 0; j < numberOfDepartments; j++) {
         flowMetrics?[i][j] = Metric(
@@ -44,10 +46,6 @@ class _FlowMetricInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    int numberOfDepartments = facility?.numberOfDepartments ?? 0;
-    // Facility? facility =
-    //     ModalRoute.of(context)!.settings.arguments as Facility?;
-    // distanceArgument.facility = facility!;
 
     return Scaffold(
       body: Container(
@@ -69,7 +67,7 @@ class _FlowMetricInformationScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: List.generate(
-                        4,
+                        3,
                         (index) => Expanded(
                           child: Container(
                             margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
@@ -116,11 +114,6 @@ class _FlowMetricInformationScreenState
                         )
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "If there are no metrics, enter 0. E.g A to A = 0",
-                      style: TextStyle(fontSize: 14),
-                    ),
                     SizedBox(height: _deviceHeight * .025),
                   ],
                 ),
@@ -149,16 +142,17 @@ class _FlowMetricInformationScreenState
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
-                    setState(() => distanceArgument.flowMetrics = flowMetrics),
-                    for (int i = 0; i < facility!.numberOfDepartments!; i++)
-                      for (int j = 0; j < facility!.numberOfDepartments!; j++)
+                    setState(
+                        () => optimizationArgument.flowMetrics = flowMetrics),
+                    for (int i = 0; i < numberOfDepartments; i++)
+                      for (int j = 0; j < numberOfDepartments; j++)
                         debugPrint(
                             "Flow Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${flowMetrics?[i][j].metric}"),
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      DistanceInformationScreen.routeName,
+                      OptimizationInformationScreen.routeName,
                       ModalRoute.withName('/'),
-                      arguments: distanceArgument,
+                      arguments: optimizationArgument,
                     ),
                   },
                 )

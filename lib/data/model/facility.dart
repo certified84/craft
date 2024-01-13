@@ -1,10 +1,8 @@
-import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/optimization.dart';
 
 class Facility {
   String? id;
   String? name;
-  int? numberOfDepartments;
   double? totalArea;
   double? length;
   double? breadth;
@@ -17,7 +15,6 @@ class Facility {
   Facility({
     this.id,
     this.name,
-    this.numberOfDepartments,
     this.totalArea,
     this.length,
     this.breadth,
@@ -32,7 +29,6 @@ class Facility {
     Facility item = Facility(
       id: map['id'],
       name: map['name'],
-      numberOfDepartments: map['numberOfDepartments'],
       totalArea: map['totalArea'],
       initialScore: map['initialScore'],
       optimizedScore: map['optimizedScore'],
@@ -45,7 +41,6 @@ class Facility {
     return {
       'id': id,
       'name': name,
-      'numberOfDepartments': numberOfDepartments,
       'totalArea': totalArea,
       'initialScore': initialScore,
       'optimizedScore': optimizedScore,
