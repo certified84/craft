@@ -64,11 +64,10 @@ class Optimization {
 class FacilityLayout {
   List<List<Metric>> distanceMetrics;
   List<List<Metric>> flowMetrics;
+  String? from;
+  String? to;
 
-  FacilityLayout(
-    this.distanceMetrics,
-    this.flowMetrics,
-  );
+  FacilityLayout(this.distanceMetrics, this.flowMetrics, {this.from, this.to});
 }
 
 class Department {

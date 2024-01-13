@@ -328,48 +328,28 @@ class _OptimizationInformationScreenState
       argument.flowMetrics!,
     );
 
-    var prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
-    initialScore = prev;
+    initialScore =
+        _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
+    ;
+    debugPrint("Initial: $initialScore");
 
     for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns - 1; j++) {
-        // var newLayout = _swapCentroids(i, j, i, j + 1, argument);
-        // var newObjective =
-        //     _calculateObjectiveFunction(newLayout, numberOfDepartments);
+      for (int j = 0; j < columns; j++) {
+        for (int k = i; k < rows; k++) {
+          int l = (k == i) ? j + 1 : 0;
+          for (; l < columns; l++) {
+            if (k == i && l == j) continue;
 
-        // debugPrint("Prev $prev, New: $newObjective");
-
-        // if (newObjective < prev) {
-        //   debugPrint("Improved: Prev $prev, New: $newObjective");
-        //   optimizations.add(
-        //     Optimization(
-        //       newObjective,
-        //       facilityLayout.distanceMetrics[i][j].i,
-        //       newLayout.distanceMetrics[i][j].i,
-        //     ),
-        //   );
-        //   prev = newObjective;
-        //   facilityLayout = newLayout;
-        // }
-        for (int k = 0; k < rows; k++) {
-          for (int l = 0; l < columns - 1; l++) {
-            if (i == j && k == l) continue;
+            debugPrint("i, j: $i, $j && k, l: $k, $l");
             var newLayout = _swapCentroids(i, j, k, l, argument);
-            var newObjective =
+            var score =
                 _calculateObjectiveFunction(newLayout, numberOfDepartments);
-
-            // if (newObjective < prev) {
-            debugPrint("Improved: Prev $prev, New: $newObjective");
-            optimizations.add(
-              Optimization(
-                newObjective,
-                facilityLayout.distanceMetrics[i][j].i,
-                newLayout.distanceMetrics[i][j].i,
-              ),
+            var optimization = Optimization(
+              score,
+              newLayout.from!,
+              newLayout.to!,
             );
-            prev = newObjective;
-            facilityLayout = newLayout;
-            // }
+            optimizations.add(optimization);
           }
         }
       }
@@ -439,16 +419,12 @@ class _OptimizationInformationScreenState
     var newCentroids = centroids;
     var centroidTemp = newCentroids[i1][j1];
 
-    // debugPrint("Swapping $i1, $j1 with $i2, $j2: Before");
-    // debugPrint("Centroid[$i1, $j1]: ${centroids[i1][j1]}");
-    // debugPrint("Centroid[$i2, $j2]: ${centroids[i2][j2]}\n");
+    newLayout.from = centroids[i1][j1].name;
+    newLayout.to = newCentroids[i2][j2].name;
 
     newCentroids[i1][j1] = newCentroids[i2][j2];
     newCentroids[i2][j2] = centroidTemp;
 
-    // debugPrint("Swapping $i1, $j1 with $i2, $j2: After");
-    // debugPrint("Centroid[$i1, $j1]: ${centroids[i1][j1]}");
-    // debugPrint("Centroid[$i2, $j2]: ${centroids[i2][j2]}\n\n");
     newLayout.distanceMetrics =
         _calculateNewDistances(rows, columns, newCentroids);
 
