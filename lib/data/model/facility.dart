@@ -67,8 +67,8 @@ class Optimization {
 }
 
 class FacilityLayout {
-  List<List<DistanceMetric>> distanceMetrics;
-  List<List<FlowMetric>> flowMetrics;
+  List<List<Metric>> distanceMetrics;
+  List<List<Metric>> flowMetrics;
 
   FacilityLayout(
     this.distanceMetrics,

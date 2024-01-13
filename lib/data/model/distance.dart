@@ -1,8 +1,9 @@
 import 'package:craft/data/model/facility.dart';
+import 'package:craft/data/model/optimization.dart';
 
 class DistanceArgument {
   Facility? facility;
-  List<List<FlowMetric>>? flowMetrics;
+  List<List<Metric>>? flowMetrics;
 
   DistanceArgument({this.facility, this.flowMetrics});
 
@@ -20,16 +21,4 @@ class DistanceArgument {
       'flowMetrics': flowMetrics,
     };
   }
-}
-
-class FlowMetric {
-  String i;
-  String j;
-  String metric;
-
-  FlowMetric(
-    this.i,
-    this.j,
-    this.metric,
-  );
 }

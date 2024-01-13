@@ -3,6 +3,7 @@ import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
 import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
+import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
 import '../../theme/colors.dart' as craft_colors;
 
@@ -19,7 +20,7 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   OptimizationArgument optimizationArgument = OptimizationArgument();
 
   late DistanceArgument? distanceArgument;
-  List<List<DistanceMetric>> distanceMetrics = [];
+  List<List<Metric>> distanceMetrics = [];
 
   List<List<Department>> positions = [];
   List<List<Department>> centroids = [];
@@ -53,10 +54,8 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
     centroids = List.generate(rows,
         (_) => List<Department>.filled(columns, Department("A", "0", "0")));
 
-    distanceMetrics = List.generate(
-        numberOfDepartments,
-        (_) => List<DistanceMetric>.filled(
-            numberOfDepartments, DistanceMetric("A", "B", "0")));
+    distanceMetrics = List.generate(numberOfDepartments,
+        (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "0")));
 
     // Update the values of the positions as required
     int initial = 0;
@@ -77,8 +76,8 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
         Department department = positions[i][j];
         centroids[i][j] = (Department(
             String.fromCharCode(65 + initial++),
-            "${int.parse(department.j) + intialCentroidX}",
-            "${int.parse(department.i) + intialCentroidY}"));
+            "${int.parse(department.j) * length + intialCentroidX}",
+            "${int.parse(department.i) * breadth + intialCentroidY}"));
       }
     }
 
@@ -94,7 +93,7 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                     .abs() +
                 (double.parse(currentElement.j) - double.parse(otherElement.j))
                     .abs();
-            distanceMetrics[i * columns + j][k * columns + l] = DistanceMetric(
+            distanceMetrics[i * columns + j][k * columns + l] = Metric(
               currentElement.name,
               otherElement.name,
               "$distance",
@@ -218,20 +217,22 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
-                    // for (int i = 0;
-                    //     i < distanceArgument!.facility!.numberOfDepartments!;
-                    //     i++)
-                    //   for (int j = 0;
-                    //       j < distanceArgument!.facility!.numberOfDepartments!;
-                    //       j++)
-                    //     debugPrint(
-                    //         "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics?[i][j].metric}"),
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //   context,
-                    //   OptimizationInformationScreen.routeName,
-                    //   ModalRoute.withName('/'),
-                    //   arguments: optimizationArgument,
-                    // ),
+                    for (int i = 0;
+                        i < distanceArgument!.facility!.numberOfDepartments!;
+                        i++)
+                      for (int j = 0;
+                          j < distanceArgument!.facility!.numberOfDepartments!;
+                          j++)
+                        debugPrint(
+                            "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics[i][j].metric}"),
+                    setState(() =>
+                        optimizationArgument.distanceMetrics = distanceMetrics),
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      OptimizationInformationScreen.routeName,
+                      ModalRoute.withName('/'),
+                      arguments: optimizationArgument,
+                    ),
                   },
                 )
               ],

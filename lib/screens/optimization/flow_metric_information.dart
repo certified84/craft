@@ -2,6 +2,7 @@ import 'package:craft/components/buttons.dart';
 import 'package:craft/components/text_field.dart';
 import 'package:craft/data/model/distance.dart';
 import 'package:craft/data/model/facility.dart';
+import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
 import 'package:craft/screens/optimization/distance_information.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _FlowMetricInformationScreenState
   DistanceArgument distanceArgument = DistanceArgument();
 
   late Facility? facility;
-  List<List<FlowMetric>>? flowMetrics;
+  List<List<Metric>>? flowMetrics;
 
   @override
   void didChangeDependencies() {
@@ -29,13 +30,11 @@ class _FlowMetricInformationScreenState
     facility = ModalRoute.of(context)!.settings.arguments as Facility?;
     distanceArgument.facility = facility!;
     int numberOfDepartments = facility?.numberOfDepartments ?? 0;
-    flowMetrics = List.generate(
-        numberOfDepartments,
-        (_) => List<FlowMetric>.filled(
-            numberOfDepartments, FlowMetric("A", "B", "0")));
+    flowMetrics = List.generate(numberOfDepartments,
+        (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "0")));
     for (int i = 0; i < numberOfDepartments; i++) {
       for (int j = 0; j < numberOfDepartments; j++) {
-        flowMetrics?[i][j] = FlowMetric(
+        flowMetrics?[i][j] = Metric(
             String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
       }
     }
