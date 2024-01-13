@@ -19,7 +19,7 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   OptimizationArgument optimizationArgument = OptimizationArgument();
 
   late DistanceArgument? distanceArgument;
-  List<List<DistanceMetric>>? distanceMetrics;
+  List<List<DistanceMetric>> distanceMetrics = [];
 
   List<List<Department>> positions = [];
   List<List<Department>> centroids = [];
@@ -47,15 +47,11 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
     double breadth = distanceArgument?.facility?.breadth ?? 0;
 
     // Generate default values for the arrays
-    positions = List.generate(
-        numberOfDepartments,
-        (_) => List<Department>.filled(
-            numberOfDepartments, Department("A", "0", "0")));
+    positions = List.generate(rows,
+        (_) => List<Department>.filled(columns, Department("A", "0", "0")));
 
-    centroids = List.generate(
-        numberOfDepartments,
-        (_) => List<Department>.filled(
-            numberOfDepartments, Department("A", "0", "0")));
+    centroids = List.generate(rows,
+        (_) => List<Department>.filled(columns, Department("A", "0", "0")));
 
     distanceMetrics = List.generate(
         numberOfDepartments,
@@ -86,54 +82,27 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
       }
     }
 
-    // Convert the centroid matric to an array
-    List<Department> centroidArray =
-        List.filled(numberOfDepartments, Department("A", "0", "0"));
-
-    int position = 0;
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        centroidArray[position++] = centroids[i][j];
-      }
-    }
-
     // Calculate the distace between each department
-    position = 0;
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
-        var centroid1 = centroidArray[position++];
-        var centroid2 = centroidArray[position++];
-
-        debugPrint("Centroid1: $centroid1, Centroid2: $centroid2");
+        var currentElement = centroids[i][j];
+        for (int k = 0; k < rows; k++) {
+          for (int l = 0; l < columns; l++) {
+            var otherElement = centroids[k][l];
+            var distance = (double.parse(currentElement.i) -
+                        double.parse(otherElement.i))
+                    .abs() +
+                (double.parse(currentElement.j) - double.parse(otherElement.j))
+                    .abs();
+            distanceMetrics[i * columns + j][k * columns + l] = DistanceMetric(
+              currentElement.name,
+              otherElement.name,
+              "$distance",
+            );
+          }
+        }
       }
     }
-
-    // for (int i = 0; i < numberOfDepartments; i++) {
-    //   for (int j = 0; j < numberOfDepartments; j++) {
-    //     debugPrint("Centroid Array[$i]: ${centroidArray[i]}");
-    //   }
-    // }
-
-    // for (int i = 0; i < rows; i++) {
-    //   for (int j = 0; j < columns; j++) {
-    //     var centroid1 = centroids[i][j];
-    //     // if (j == columns - 1) break;
-    //     var centroid2 = centroids[i][j + 1];
-    //     debugPrint("Centroid1: $centroid1");
-    //     debugPrint("Centroid2: $centroid2");
-    //   }
-    // }
-
-    // distanceMetrics = List.generate(
-    //     numberOfDepartments,
-    //     (_) => List<DistanceMetric>.filled(
-    //         numberOfDepartments, DistanceMetric("A", "B", "0")));
-    // for (int i = 0; i < numberOfDepartments; i++) {
-    //   for (int j = 0; j < numberOfDepartments; j++) {
-    //     distanceMetrics?[i][j] = DistanceMetric(
-    //         String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
-    //   }
-    // }
   }
 
   @override
