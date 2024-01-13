@@ -331,18 +331,34 @@ class _OptimizationInformationScreenState
     var prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
     initialScore = prev;
 
-    int maxIterations = 1000;
-    bool improved = false;
-    for (int k = 0; k < maxIterations; k++) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns - 1; j++) {
-          var newLayout = _swapCentroids(i, j, i, j + 1, argument);
-          var newObjective =
-              _calculateObjectiveFunction(newLayout, numberOfDepartments);
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns - 1; j++) {
+        // var newLayout = _swapCentroids(i, j, i, j + 1, argument);
+        // var newObjective =
+        //     _calculateObjectiveFunction(newLayout, numberOfDepartments);
 
-          debugPrint("Prev $prev, New: $newObjective");
+        // debugPrint("Prev $prev, New: $newObjective");
 
-          if (newObjective < prev) {
+        // if (newObjective < prev) {
+        //   debugPrint("Improved: Prev $prev, New: $newObjective");
+        //   optimizations.add(
+        //     Optimization(
+        //       newObjective,
+        //       facilityLayout.distanceMetrics[i][j].i,
+        //       newLayout.distanceMetrics[i][j].i,
+        //     ),
+        //   );
+        //   prev = newObjective;
+        //   facilityLayout = newLayout;
+        // }
+        for (int k = 0; k < rows; k++) {
+          for (int l = 0; l < columns - 1; l++) {
+            if (i == j && k == l) continue;
+            var newLayout = _swapCentroids(i, j, k, l, argument);
+            var newObjective =
+                _calculateObjectiveFunction(newLayout, numberOfDepartments);
+
+            // if (newObjective < prev) {
             debugPrint("Improved: Prev $prev, New: $newObjective");
             optimizations.add(
               Optimization(
@@ -353,12 +369,9 @@ class _OptimizationInformationScreenState
             );
             prev = newObjective;
             facilityLayout = newLayout;
-            improved = true;
+            // }
           }
         }
-      }
-      if (!improved) {
-        break;
       }
     }
 
