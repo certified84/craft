@@ -240,7 +240,7 @@ class _OptimizationInformationScreenState
     var prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
     debugPrint("Prev: $prev");
 
-    int maxIterations = 1000;
+    // int maxIterations = 1000;
     // for (int k = 0; k < maxIterations; k++) {
     for (int i = 0; i < numberOfDepartments; i++) {
       for (int j = 0; j < numberOfDepartments - 1; j++) {

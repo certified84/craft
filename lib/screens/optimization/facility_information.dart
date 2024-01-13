@@ -114,6 +114,30 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                       onChanged: (p0) =>
                           setState(() => facility.totalArea = double.parse(p0)),
                     ),
+                    FacilityInput(
+                      hintText: "Enter the length of each department",
+                      autofocus: true,
+                      onChanged: (p0) =>
+                          setState(() => facility.length = double.parse(p0)),
+                    ),
+                    FacilityInput(
+                      hintText: "Enter the breadth of each department",
+                      autofocus: true,
+                      onChanged: (p0) =>
+                          setState(() => facility.breadth = double.parse(p0)),
+                    ),
+                    FacilityInput(
+                      hintText: "Enter the number of rows",
+                      autofocus: true,
+                      onChanged: (p0) =>
+                          setState(() => facility.rows = int.parse(p0)),
+                    ),
+                    FacilityInput(
+                      hintText: "Enter the number of columns",
+                      autofocus: true,
+                      onChanged: (p0) =>
+                          setState(() => facility.columns = int.parse(p0)),
+                    ),
                   ],
                 ),
                 defaultButton(

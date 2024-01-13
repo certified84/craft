@@ -1,9 +1,8 @@
 import 'package:craft/components/buttons.dart';
-import 'package:craft/components/text_field.dart';
 import 'package:craft/data/model/distance.dart';
+import 'package:craft/data/model/facility.dart';
 import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
-import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
 import '../../theme/colors.dart' as craft_colors;
 
@@ -22,6 +21,9 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
   late DistanceArgument? distanceArgument;
   List<List<DistanceMetric>>? distanceMetrics;
 
+  List<List<Department>> positions = [];
+  List<List<Department>> centroids = [];
+
   @override
   void initState() {
     super.initState();
@@ -33,26 +35,113 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
     distanceArgument =
         ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
     optimizationArgument.distanceArgument = distanceArgument!;
+
+    // Define the variables needed
     int numberOfDepartments =
         distanceArgument?.facility?.numberOfDepartments ?? 0;
+
+    int rows = distanceArgument?.facility?.rows ?? 0;
+    int columns = distanceArgument?.facility?.columns ?? 0;
+
+    double length = distanceArgument?.facility?.length ?? 0;
+    double breadth = distanceArgument?.facility?.breadth ?? 0;
+
+    // Generate default values for the arrays
+    positions = List.generate(
+        numberOfDepartments,
+        (_) => List<Department>.filled(
+            numberOfDepartments, Department("A", "0", "0")));
+
+    centroids = List.generate(
+        numberOfDepartments,
+        (_) => List<Department>.filled(
+            numberOfDepartments, Department("A", "0", "0")));
+
     distanceMetrics = List.generate(
         numberOfDepartments,
         (_) => List<DistanceMetric>.filled(
             numberOfDepartments, DistanceMetric("A", "B", "0")));
-    for (int i = 0; i < numberOfDepartments; i++) {
-      for (int j = 0; j < numberOfDepartments; j++) {
-        distanceMetrics?[i][j] = DistanceMetric(
-            String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
+
+    // Update the values of the positions as required
+    int initial = 0;
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        positions[i][j] =
+            (Department(String.fromCharCode(65 + initial++), "$i", "$j"));
       }
     }
+
+    double intialCentroidX = length / 2.0;
+    double intialCentroidY = breadth / 2.0;
+    initial = 0;
+
+    // Obtain the Centroid for each department as required
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        Department department = positions[i][j];
+        centroids[i][j] = (Department(
+            String.fromCharCode(65 + initial++),
+            "${int.parse(department.j) + intialCentroidX}",
+            "${int.parse(department.i) + intialCentroidY}"));
+      }
+    }
+
+    // Convert the centroid matric to an array
+    List<Department> centroidArray =
+        List.filled(numberOfDepartments, Department("A", "0", "0"));
+
+    int position = 0;
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        centroidArray[position++] = centroids[i][j];
+      }
+    }
+
+    // Calculate the distace between each department
+    position = 0;
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        var centroid1 = centroidArray[position++];
+        var centroid2 = centroidArray[position++];
+
+        debugPrint("Centroid1: $centroid1, Centroid2: $centroid2");
+      }
+    }
+
+    // for (int i = 0; i < numberOfDepartments; i++) {
+    //   for (int j = 0; j < numberOfDepartments; j++) {
+    //     debugPrint("Centroid Array[$i]: ${centroidArray[i]}");
+    //   }
+    // }
+
+    // for (int i = 0; i < rows; i++) {
+    //   for (int j = 0; j < columns; j++) {
+    //     var centroid1 = centroids[i][j];
+    //     // if (j == columns - 1) break;
+    //     var centroid2 = centroids[i][j + 1];
+    //     debugPrint("Centroid1: $centroid1");
+    //     debugPrint("Centroid2: $centroid2");
+    //   }
+    // }
+
+    // distanceMetrics = List.generate(
+    //     numberOfDepartments,
+    //     (_) => List<DistanceMetric>.filled(
+    //         numberOfDepartments, DistanceMetric("A", "B", "0")));
+    // for (int i = 0; i < numberOfDepartments; i++) {
+    //   for (int j = 0; j < numberOfDepartments; j++) {
+    //     distanceMetrics?[i][j] = DistanceMetric(
+    //         String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
+    //   }
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    int numberOfDepartments =
-        distanceArgument?.facility?.numberOfDepartments ?? 0;
+    // int numberOfDepartments =
+    //     distanceArgument?.facility?.numberOfDepartments ?? 0;
     // DistanceArgument? distanceArgument =
     //     ModalRoute.of(context)!.settings.arguments as DistanceArgument?;
     // optimizationArgument.distanceArgument = distanceArgument!;
@@ -134,50 +223,46 @@ class _DistanceInformationScreenState extends State<DistanceInformationScreen> {
                   ],
                 ),
                 SizedBox(height: _deviceHeight * .025),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      for (int i = 0; i < numberOfDepartments; i++)
-                        for (int j = 0; j < numberOfDepartments; j++)
-                          i == j
-                              ? Container()
-                              : FacilityInput(
-                                  hintText:
-                                      "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
-                                  autofocus: true,
-                                  onChanged: (p0) => {
-                                    setState(() =>
-                                        distanceMetrics?[i][j].metric = p0)
-                                  },
-                                ),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
-                ),
+                // Expanded(
+                //   child: ListView(
+                //     children: [
+                //       for (int i = 0; i < numberOfDepartments; i++)
+                //         for (int j = 0; j < numberOfDepartments; j++)
+                //           i == j
+                //               ? Container()
+                //               : FacilityInput(
+                //                   hintText:
+                //                       "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
+                //                   autofocus: true,
+                //                   onChanged: (p0) => {
+                //                     setState(() =>
+                //                         distanceMetrics?[i][j].metric = p0)
+                //                   },
+                //                 ),
+                //       const SizedBox(height: 40),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(height: 15),
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
                   backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
-                    setState(
-                      () => optimizationArgument.distanceMetrics =
-                          distanceMetrics,
-                    ),
-                    for (int i = 0;
-                        i < distanceArgument!.facility!.numberOfDepartments!;
-                        i++)
-                      for (int j = 0;
-                          j < distanceArgument!.facility!.numberOfDepartments!;
-                          j++)
-                        debugPrint(
-                            "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics?[i][j].metric}"),
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      OptimizationInformationScreen.routeName,
-                      ModalRoute.withName('/'),
-                      arguments: optimizationArgument,
-                    ),
+                    // for (int i = 0;
+                    //     i < distanceArgument!.facility!.numberOfDepartments!;
+                    //     i++)
+                    //   for (int j = 0;
+                    //       j < distanceArgument!.facility!.numberOfDepartments!;
+                    //       j++)
+                    //     debugPrint(
+                    //         "Distance Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${distanceMetrics?[i][j].metric}"),
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //   context,
+                    //   OptimizationInformationScreen.routeName,
+                    //   ModalRoute.withName('/'),
+                    //   arguments: optimizationArgument,
+                    // ),
                   },
                 )
               ],

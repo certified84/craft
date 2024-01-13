@@ -6,6 +6,10 @@ class Facility {
   String? name;
   int? numberOfDepartments;
   double? totalArea;
+  double? length;
+  double? breadth;
+  int? rows;
+  int? columns;
   double? initialScore;
   double? optimizedScore;
   List<Optimization>? optimizations;
@@ -15,6 +19,10 @@ class Facility {
     this.name,
     this.numberOfDepartments,
     this.totalArea,
+    this.length,
+    this.breadth,
+    this.rows,
+    this.columns,
     this.initialScore,
     this.optimizedScore,
     this.optimizations,
@@ -66,4 +74,17 @@ class FacilityLayout {
     this.distanceMetrics,
     this.flowMetrics,
   );
+}
+
+class Department {
+  String name;
+  String i;
+  String j;
+
+  Department(this.name, this.i, this.j);
+
+  @override
+  String toString() {
+    return "Department: $name, $i, $j";
+  }
 }

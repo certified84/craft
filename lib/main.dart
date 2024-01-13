@@ -1,4 +1,3 @@
-import 'package:craft/screens/home.dart';
 import 'package:craft/screens/optimization/distance_information.dart';
 import 'package:craft/screens/optimization/flow_metric_information.dart';
 import 'package:craft/screens/optimization/optimization_information.dart';
