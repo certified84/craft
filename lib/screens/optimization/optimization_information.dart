@@ -330,8 +330,7 @@ class _OptimizationInformationScreenState
 
     initialScore =
         _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
-    ;
-    debugPrint("Initial: $initialScore");
+    // debugPrint("Initial: $initialScore");
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
@@ -340,7 +339,7 @@ class _OptimizationInformationScreenState
           for (; l < columns; l++) {
             if (k == i && l == j) continue;
 
-            debugPrint("i, j: $i, $j && k, l: $k, $l");
+            // debugPrint("i, j: $i, $j && k, l: $k, $l");
             var newLayout = _swapCentroids(i, j, k, l, argument);
             var score =
                 _calculateObjectiveFunction(newLayout, numberOfDepartments);
@@ -408,22 +407,50 @@ class _OptimizationInformationScreenState
     //     break;
     //   }
     // }
+
+    // for (int i = 0; i < rows; i++) {
+    //   for (int j = 0; j < columns; j++) {
+    //     // debugPrint("${newCentroids[i][j]}");
+    //     debugPrint("${centroids[i][j]}");
+    //   }
+    // }
     return Future.value(optimizations);
   }
 
   FacilityLayout _swapCentroids(
-      int i1, int j1, int i2, int j2, OptimizationArgument argument) {
+    int i1,
+    int j1,
+    int i2,
+    int j2,
+    OptimizationArgument argument,
+  ) {
     var newLayout =
         FacilityLayout(argument.distanceMetrics!, argument.flowMetrics!);
 
-    var newCentroids = centroids;
-    var centroidTemp = newCentroids[i1][j1];
+    var newCentroids = centroids
+        .map((list) => list
+            .map((department) =>
+                Department(department.name, department.i, department.j))
+            .toList())
+        .toList();
+
+    var centroid1 = newCentroids[i1][j1];
+    var centroid2 = newCentroids[i2][j2];
 
     newLayout.from = centroids[i1][j1].name;
-    newLayout.to = newCentroids[i2][j2].name;
+    newLayout.to = centroid2.name;
 
-    newCentroids[i1][j1] = newCentroids[i2][j2];
-    newCentroids[i2][j2] = centroidTemp;
+    var i = centroid1.i;
+    var j = centroid1.j;
+
+    var ii = centroid2.i;
+    var jj = centroid2.j;
+
+    newCentroids[i2][j2].i = i;
+    newCentroids[i2][j2].j = j;
+
+    newCentroids[i1][j1].i = ii;
+    newCentroids[i1][j1].j = jj;
 
     newLayout.distanceMetrics =
         _calculateNewDistances(rows, columns, newCentroids);
@@ -464,26 +491,6 @@ class _OptimizationInformationScreenState
     return newDistanceMetric;
   }
 
-  FacilityLayout _swapDepartments(
-      int i1, int j1, int i2, int j2, OptimizationArgument argument) {
-    var newLayout =
-        FacilityLayout(argument.distanceMetrics!, argument.flowMetrics!);
-    var distanceMetricTemp = newLayout.distanceMetrics[i1][j1];
-
-    debugPrint("Swapping $i1, $j1 with $i2, $j2: Before");
-    debugPrint("Distance[$i1, $j1]: ${argument.distanceMetrics![i1][j1]}");
-    debugPrint("Distance[$i2, $j2]: ${argument.distanceMetrics![i2][j2]}\n");
-
-    newLayout.distanceMetrics[i1][j1] = newLayout.distanceMetrics[i2][j2];
-    newLayout.distanceMetrics[i2][j2] = distanceMetricTemp;
-
-    debugPrint("Swapping $i1, $j1 with $i2, $j2: After");
-    debugPrint("Distance[$i1, $j1]: ${argument.distanceMetrics![i1][j1]}");
-    debugPrint("Distance[$i2, $j2]: ${argument.distanceMetrics![i2][j2]}\n\n");
-
-    return newLayout;
-  }
-
   double _calculateObjectiveFunction(
     FacilityLayout layout,
     int numberOfDepartments,
@@ -495,7 +502,6 @@ class _OptimizationInformationScreenState
         objective += costMetric[i][j];
       }
     }
-    // debugPrint("Objective: $objective");
     return objective;
   }
 
@@ -515,12 +521,8 @@ class _OptimizationInformationScreenState
           double distanceMetric =
               double.parse(layout.distanceMetrics[i][j].metric);
           costMetric[i][j] = flowMetric * distanceMetric;
-          // debugPrint(
-          //     "Flow[${String.fromCharCode(i + 65)}]: $flowMetric, Distance[${String.fromCharCode(j + 65)}]: $distanceMetric, Cost: ${flowMetric * distanceMetric}}");
-        } catch (e) {
-          // debugPrint("i: $i, j: $j");
-          // debugPrint('Error parsing double: $e');
-        }
+          // ignore: empty_catches
+        } catch (e) {}
       }
     }
     return costMetric;
