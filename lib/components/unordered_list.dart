@@ -7,25 +7,28 @@ class UnorderedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var widgetList = <Widget>[];
-    for (var text in texts) {
-      widgetList.add(UnorderedListItem(text));
+    for (int i = 0; i < texts.length; i++) {
+      widgetList.add(UnorderedListItem(texts[i], i + 1));
       widgetList.add(const SizedBox(height: 8.0));
     }
+    // for (var text in texts) {}
 
     return Column(children: widgetList);
   }
 }
 
 class UnorderedListItem extends StatelessWidget {
-  const UnorderedListItem(this.text, {super.key});
+  const UnorderedListItem(this.text, this.index, {super.key});
   final String text;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text("• "),
+        // •
+        Text("$index. "),
         Expanded(
           child: Text(
             text,

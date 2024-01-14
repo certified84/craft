@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 abstract final class Colors {
-  static const Color primary = Color(0xFFF4B667);
+  static const Color primary = Color(0xFFAE0057);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color primaryContainer = Color(0xFFD1E4FF);
   static const Color onPrimaryContainer = Color(0xFF001D36);

@@ -44,7 +44,7 @@ class _InformationScreenState extends State<InformationScreen> {
                 Column(
                   children: [
                     const Text(
-                      "Few things to note before using the application:",
+                      "Few things to note before using the application",
                       style: TextStyle(
                         color: craft_colors.Colors.primary,
                         fontWeight: FontWeight.bold,
@@ -52,14 +52,30 @@ class _InformationScreenState extends State<InformationScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(left: 18, top: 18),
-                      child: const UnorderedList(
-                        [
-                          "The application assumes all the departments in the layout has equal areas. This means that the no of departments times the area of a department equals the total area of the facility or total area of the facility divided by the number of departments equal the area of each department",
-                          "There are no fixed points meaning all departments can be swapped.",
-                        ],
-                      ),
-                    )
+                        padding: const EdgeInsets.only(left: 18, top: 18),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "The application assumes that:",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            UnorderedList(
+                              [
+                                "All the departments in the layout has equal areas.",
+                                "There are no fixed points meaning all departments can be swapped.",
+                                "The facility has a single layout structure.",
+                                "It uses pairwise exchange for swapping between departments.",
+                                "The cost matrix is unity.",
+                                "It swaps based on equal areas."
+                              ],
+                            ),
+                          ],
+                        ))
                   ],
                 ),
                 Column(

@@ -27,6 +27,13 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
 
+    var disabled = (facility.name == null ||
+        facility.totalArea == null ||
+        facility.length == null ||
+        facility.breadth == null ||
+        facility.rows == null ||
+        facility.columns == null);
+
     return Scaffold(
       body: Container(
         color: craft_colors.Colors.white,
@@ -83,9 +90,10 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                             (Route<dynamic> route) => false,
                           ),
                           child: Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(0xFFFBE7CD),
+                              color:
+                                  craft_colors.Colors.primary.withOpacity(.75),
                             ),
                             padding: const EdgeInsets.all(4),
                             child: const Icon(
@@ -97,54 +105,65 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                       ],
                     ),
                     SizedBox(height: _deviceHeight * .05),
-                    FacilityInput(
-                      hintText: "Enter the facility name",
-                      autofocus: true,
-                      onChanged: (p0) => setState(() => facility.name = p0),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the total area of the facility",
-                      autofocus: true,
-                      onChanged: (p0) =>
-                          setState(() => facility.totalArea = double.parse(p0)),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the length of each department",
-                      autofocus: true,
-                      onChanged: (p0) =>
-                          setState(() => facility.length = double.parse(p0)),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the breadth of each department",
-                      autofocus: true,
-                      onChanged: (p0) =>
-                          setState(() => facility.breadth = double.parse(p0)),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the number of rows",
-                      autofocus: true,
-                      onChanged: (p0) =>
-                          setState(() => facility.rows = int.parse(p0)),
-                    ),
-                    FacilityInput(
-                      hintText: "Enter the number of columns",
-                      autofocus: true,
-                      onChanged: (p0) =>
-                          setState(() => facility.columns = int.parse(p0)),
-                    ),
                   ],
                 ),
+                SizedBox(height: _deviceHeight * .025),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      FacilityInput(
+                        hintText: "Enter the facility name",
+                        autofocus: true,
+                        onChanged: (p0) => setState(() => facility.name = p0),
+                      ),
+                      FacilityInput(
+                        hintText: "Enter the total area of the facility",
+                        autofocus: true,
+                        onChanged: (p0) => setState(
+                            () => facility.totalArea = double.parse(p0)),
+                      ),
+                      FacilityInput(
+                        hintText: "Enter the length of each department",
+                        autofocus: true,
+                        onChanged: (p0) =>
+                            setState(() => facility.length = double.parse(p0)),
+                      ),
+                      FacilityInput(
+                        hintText: "Enter the breadth of each department",
+                        autofocus: true,
+                        onChanged: (p0) =>
+                            setState(() => facility.breadth = double.parse(p0)),
+                      ),
+                      FacilityInput(
+                        hintText: "Enter the number of rows",
+                        autofocus: true,
+                        onChanged: (p0) =>
+                            setState(() => facility.rows = int.parse(p0)),
+                      ),
+                      FacilityInput(
+                        hintText: "Enter the number of columns",
+                        autofocus: true,
+                        onChanged: (p0) =>
+                            setState(() => facility.columns = int.parse(p0)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
-                  backgroundColor: craft_colors.Colors.primary,
+                  backgroundColor: disabled
+                      ? craft_colors.Colors.primary.withOpacity(.4)
+                      : craft_colors.Colors.primary,
                   onPressed: () => {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      FlowMetricInformationScreen.routeName,
-                      ModalRoute.withName('/'),
-                      arguments: facility,
-                    ),
+                    if (!disabled)
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        FlowMetricInformationScreen.routeName,
+                        ModalRoute.withName('/'),
+                        arguments: facility,
+                      ),
                   },
                 )
               ],
