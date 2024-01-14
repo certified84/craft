@@ -81,30 +81,9 @@ class _OptimizationInformationScreenState
       }
     }
 
-    // Calculate the distace between each department
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        var currentElement = centroids[i][j];
-        for (int k = 0; k < rows; k++) {
-          for (int l = 0; l < columns; l++) {
-            var otherElement = centroids[k][l];
-            var distance = (double.parse(currentElement.i) -
-                        double.parse(otherElement.i))
-                    .abs() +
-                (double.parse(currentElement.j) - double.parse(otherElement.j))
-                    .abs();
-            distanceMetrics[i * columns + j][k * columns + l] = Metric(
-              currentElement.name,
-              otherElement.name,
-              "$distance",
-            );
-          }
-        }
-      }
-    }
-
     setState(() {
-      optimizationArgument?.distanceMetrics = distanceMetrics;
+      optimizationArgument?.distanceMetrics =
+          _calculateDistances(rows, columns, centroids);
     });
   }
 
@@ -291,14 +270,14 @@ class _OptimizationInformationScreenState
                                   ?.map((e) => OptimizationComponent(e))
                                   .toList(),
                               SizedBox(height: _deviceHeight * .03),
-                              Text(
-                                "Based on the results obtained, swap department ${optimizations?.last.i} with ${optimizations?.last.j} to achieve the most optimized layout",
-                                style: const TextStyle(
-                                  color: craft_colors.Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
+                              // Text(
+                              //   "Based on the results obtained, swap department ${optimizations?.last.i} with ${optimizations?.last.j} to achieve the most optimized layout",
+                              //   style: const TextStyle(
+                              //     color: craft_colors.Colors.black,
+                              //     fontWeight: FontWeight.w600,
+                              //     fontSize: 14,
+                              //   ),
+                              // ),
                             ],
                           ),
                           defaultButton(
@@ -330,7 +309,6 @@ class _OptimizationInformationScreenState
 
     initialScore =
         _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
-    // debugPrint("Initial: $initialScore");
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
@@ -339,7 +317,6 @@ class _OptimizationInformationScreenState
           for (; l < columns; l++) {
             if (k == i && l == j) continue;
 
-            // debugPrint("i, j: $i, $j && k, l: $k, $l");
             var newLayout = _swapCentroids(i, j, k, l, argument);
             var score =
                 _calculateObjectiveFunction(newLayout, numberOfDepartments);
@@ -392,33 +369,33 @@ class _OptimizationInformationScreenState
     newCentroids[i1][j1].j = jj;
 
     newLayout.distanceMetrics =
-        _calculateNewDistances(rows, columns, newCentroids);
+        _calculateDistances(rows, columns, newCentroids);
 
     return newLayout;
   }
 
-  List<List<Metric>> _calculateNewDistances(
+  List<List<Metric>> _calculateDistances(
     int rows,
     int columns,
-    List<List<Department>> newCentroids,
+    List<List<Department>> centroids,
   ) {
-    List<List<Metric>> newDistanceMetric = [];
-    newDistanceMetric = List.generate(rows * columns,
+    List<List<Metric>> distanceMetric = [];
+    distanceMetric = List.generate(rows * columns,
         (_) => List<Metric>.filled(rows * columns, Metric("A", "B", "0")));
 
     // Calculate the distace between each department
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
-        var currentElement = newCentroids[i][j];
+        var currentElement = centroids[i][j];
         for (int k = 0; k < rows; k++) {
           for (int l = 0; l < columns; l++) {
-            var otherElement = newCentroids[k][l];
+            var otherElement = centroids[k][l];
             var distance = (double.parse(currentElement.i) -
                         double.parse(otherElement.i))
                     .abs() +
                 (double.parse(currentElement.j) - double.parse(otherElement.j))
                     .abs();
-            newDistanceMetric[i * columns + j][k * columns + l] = Metric(
+            distanceMetric[i * columns + j][k * columns + l] = Metric(
               currentElement.name,
               otherElement.name,
               "$distance",
@@ -427,7 +404,7 @@ class _OptimizationInformationScreenState
         }
       }
     }
-    return newDistanceMetric;
+    return distanceMetric;
   }
 
   double _calculateObjectiveFunction(
