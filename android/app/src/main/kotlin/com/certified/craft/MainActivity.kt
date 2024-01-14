@@ -1,4 +1,4 @@
-package com.example.craft
+package com.certified.craft
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -353,67 +353,6 @@ class _OptimizationInformationScreenState
         }
       }
     }
-
-    // int maxIterations = 1000;
-    // for (int k = 0; k < maxIterations; k++) {
-    // for (int i = 0; i < numberOfDepartments; i++) {
-    //   for (int j = 0; j < numberOfDepartments - 1; j++) {
-    //     // if (i == j || i == j + 1) continue;
-    //     var newLayout = _swapDepartments(i, j, i, j + 1, argument);
-    //     var newObjective =
-    //         _calculateObjectiveFunction(newLayout, numberOfDepartments);
-    //     // debugPrint("Prev: $prev");
-    //     // debugPrint("New: $newObjective");
-
-    //     facilityLayout.distanceMetrics[0][0].i;
-    //     if (newObjective < prev) {
-    //       // debugPrint("Improved: Prev $prev, New: $newObjective");
-    //       // optimizations.add(
-    //       //   Optimization(
-    //       //     newObjective,
-    //       //     facilityLayout.distanceMetrics[i][j].i,
-    //       //     newLayout.distanceMetrics[i][j].i,
-    //       //   ),
-    //       // );
-    //       prev = newObjective;
-    //       facilityLayout = newLayout;
-    //       improved = true;
-    //     }
-    //   }
-    // }
-
-    // prev = _calculateObjectiveFunction(facilityLayout, numberOfDepartments);
-
-    // for (int j = 0; j < numberOfDepartments; j++) {
-    //   for (int i = 0; i < numberOfDepartments - 1; i++) {
-    //     var newLayout = _swapDepartments(i, j, i + 1, j, argument);
-    //     var newObjective =
-    //         _calculateObjectiveFunction(newLayout, numberOfDepartments);
-
-    //     if (newObjective < prev) {
-    //       debugPrint("Improved");
-    //       prev = newObjective;
-    //       facilityLayout = newLayout;
-    //       improved = true;
-    //       optimizations.add(Optimization(newObjective,
-    //           String.fromCharCode(i + 65), String.fromCharCode(j + 65)));
-    //     }
-    //   }
-    // }
-
-    // debugPrint("Improved? $improved, optimization: ${optimizations.length}");
-
-    //   if (!improved) {
-    //     break;
-    //   }
-    // }
-
-    // for (int i = 0; i < rows; i++) {
-    //   for (int j = 0; j < columns; j++) {
-    //     // debugPrint("${newCentroids[i][j]}");
-    //     debugPrint("${centroids[i][j]}");
-    //   }
-    // }
     return Future.value(optimizations);
   }
 
