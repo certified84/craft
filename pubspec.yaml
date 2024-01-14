@@ -65,6 +65,7 @@ flutter:
   assets:
     - assets/images/
     - assets/svgs/
+    - assets/splash.png
 
   fonts:
     - family: SpaceGrotesk

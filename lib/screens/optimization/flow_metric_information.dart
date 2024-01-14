@@ -92,7 +92,7 @@ class _FlowMetricInformationScreenState
                       children: [
                         const Expanded(
                           child: Text(
-                            "Enter the flow metric between each department",
+                            "Enter the from-to values in the flow matrix",
                             style: TextStyle(
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
