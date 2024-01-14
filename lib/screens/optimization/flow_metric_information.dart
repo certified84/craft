@@ -32,12 +32,12 @@ class _FlowMetricInformationScreenState
     optimizationArgument.facility = facility!;
     numberOfDepartments = facility!.rows! * facility!.columns!;
     flowMetrics = List.generate(numberOfDepartments,
-        (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "0")));
+        (_) => List<Metric>.filled(numberOfDepartments, Metric("A", "B", "")));
 
     for (int i = 0; i < numberOfDepartments; i++) {
       for (int j = 0; j < numberOfDepartments; j++) {
         flowMetrics?[i][j] = Metric(
-            String.fromCharCode(i + 65), String.fromCharCode(j + 65), "0");
+            String.fromCharCode(i + 65), String.fromCharCode(j + 65), "");
       }
     }
   }
@@ -46,6 +46,13 @@ class _FlowMetricInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
+    var disabled = false;
+    for (int i = 0; i < numberOfDepartments; i++) {
+      for (int j = 0; j < numberOfDepartments; j++) {
+        disabled = disabled && flowMetrics?[i][j].metric == "";
+      }
+    }
 
     return Scaffold(
       body: Container(
@@ -90,6 +97,7 @@ class _FlowMetricInformationScreenState
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
+                              fontFamily: "SpaceGrotesk",
                             ),
                           ),
                         ),
@@ -101,9 +109,10 @@ class _FlowMetricInformationScreenState
                             (Route<dynamic> route) => false,
                           ),
                           child: Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(0xFFFBE7CD),
+                              color:
+                                  craft_colors.Colors.primary.withOpacity(.75),
                             ),
                             padding: const EdgeInsets.all(4),
                             child: const Icon(
@@ -140,7 +149,9 @@ class _FlowMetricInformationScreenState
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
-                  backgroundColor: craft_colors.Colors.primary,
+                  backgroundColor: disabled
+                      ? craft_colors.Colors.primary.withOpacity(.4)
+                      : craft_colors.Colors.primary,
                   onPressed: () => {
                     setState(
                         () => optimizationArgument.flowMetrics = flowMetrics),
@@ -148,12 +159,13 @@ class _FlowMetricInformationScreenState
                       for (int j = 0; j < numberOfDepartments; j++)
                         debugPrint(
                             "Flow Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${flowMetrics?[i][j].metric}"),
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      OptimizationInformationScreen.routeName,
-                      ModalRoute.withName('/'),
-                      arguments: optimizationArgument,
-                    ),
+                    if (!disabled)
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        OptimizationInformationScreen.routeName,
+                        ModalRoute.withName('/'),
+                        arguments: optimizationArgument,
+                      ),
                   },
                 )
               ],

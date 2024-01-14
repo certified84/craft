@@ -79,6 +79,7 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
+                              fontFamily: "SpaceGrotesk",
                             ),
                           ),
                         ),

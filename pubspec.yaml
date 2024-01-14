@@ -66,6 +66,19 @@ flutter:
     - assets/images/
     - assets/svgs/
 
+  fonts:
+    - family: SpaceGrotesk
+      fonts:
+        - asset: fonts/space_grotesk_regular.ttf
+        - asset: fonts/space_grotesk_medium.ttf
+          weight: 500
+        - asset: fonts/space_grotesk_light.ttf
+          weight: 400
+        - asset: fonts/space_grotesk_bold.ttf
+          weight: 700
+        - asset: fonts/space_grotesk_bold.ttf
+          weight: 600
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

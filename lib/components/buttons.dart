@@ -29,6 +29,7 @@ Widget defaultButton({
           color: textColor ?? craft_colors.Colors.onPrimary,
           fontWeight: FontWeight.w500,
           fontSize: 16,
+          fontFamily: "SpaceGrotesk",
         ),
       ),
     ),

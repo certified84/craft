@@ -66,12 +66,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
+                          fontFamily: "SpaceGrotesk",
                         ),
                       ),
                       SizedBox(height: 8),
                       Text(
                         "Click the button below to add one",
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "SpaceGrotesk",
+                        ),
                       ),
                     ],
                   )
@@ -84,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: craft_colors.Colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
+                          fontFamily: "SpaceGrotesk",
                         ),
                       ),
                     ],

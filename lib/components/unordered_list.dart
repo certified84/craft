@@ -28,7 +28,15 @@ class UnorderedListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         // •
-        Text("$index. "),
+        Text(
+          "$index. ",
+          style: const TextStyle(
+            color: Color(0xFF6C6C73),
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            fontFamily: "SpaceGrotesk",
+          ),
+        ),
         Expanded(
           child: Text(
             text,
@@ -36,6 +44,7 @@ class UnorderedListItem extends StatelessWidget {
               color: Color(0xFF6C6C73),
               fontWeight: FontWeight.w400,
               fontSize: 14,
+              fontFamily: "SpaceGrotesk",
             ),
           ),
         ),

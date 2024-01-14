@@ -27,6 +27,9 @@ class FacilityInput extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: TextFormField(
+        style: const TextStyle(
+          fontFamily: "SpaceGrotesk",
+        ),
         autofocus: autofocus ?? false,
         cursorColor: craft_colors.Colors.primary,
         onEditingComplete: onEditingComplete,
@@ -41,6 +44,7 @@ class FacilityInput extends StatelessWidget {
             color: Color(0xFF6C6C73),
             fontWeight: FontWeight.w400,
             fontSize: 14,
+            fontFamily: "SpaceGrotesk",
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(0),

@@ -49,6 +49,7 @@ class _InformationScreenState extends State<InformationScreen> {
                         color: craft_colors.Colors.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
+                        fontFamily: "SpaceGrotesk",
                       ),
                     ),
                     Container(
@@ -61,6 +62,7 @@ class _InformationScreenState extends State<InformationScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "SpaceGrotesk",
                               ),
                             ),
                             SizedBox(height: 16),

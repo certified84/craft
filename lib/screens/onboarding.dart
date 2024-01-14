@@ -54,6 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         color: craft_colors.Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
+                        fontFamily: "SpaceGrotesk",
                       ),
                     ),
                   ),
@@ -87,6 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             color: craft_colors.Colors.black,
                             fontWeight: FontWeight.normal,
                             fontSize: 14,
+                            fontFamily: "SpaceGrotesk",
                           ),
                         ),
                         TextButton(
@@ -94,9 +96,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: const Text(
                             "Terms",
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: craft_colors.Colors.primary),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: craft_colors.Colors.primary,
+                              fontFamily: "SpaceGrotesk",
+                            ),
                           ),
                         ),
                         const Text(
@@ -105,6 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             color: craft_colors.Colors.black,
                             fontWeight: FontWeight.normal,
                             fontSize: 14,
+                            fontFamily: "SpaceGrotesk",
                           ),
                         ),
                         TextButton(
@@ -112,9 +117,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: const Text(
                             "Privacy Policy",
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: craft_colors.Colors.primary),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: craft_colors.Colors.primary,
+                              fontFamily: "SpaceGrotesk",
+                            ),
                           ),
                         ),
                       ],
