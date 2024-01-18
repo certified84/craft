@@ -4,6 +4,7 @@ import 'package:craft/data/model/facility.dart';
 import 'package:craft/data/model/optimization.dart';
 import 'package:craft/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../theme/colors.dart' as craft_colors;
 
 class OptimizationInformationScreen extends StatefulWidget {
@@ -17,7 +18,10 @@ class OptimizationInformationScreen extends StatefulWidget {
 class _OptimizationInformationScreenState
     extends State<OptimizationInformationScreen> {
   late double _deviceHeight, _deviceWidth;
+
+  final Box _box = Hive.box("craftify");
   List<Optimization>? optimizations;
+  Facility facility = Facility();
 
   OptimizationArgument? optimizationArgument;
   List<List<Metric>> distanceMetrics = [];
@@ -38,6 +42,7 @@ class _OptimizationInformationScreenState
     super.didChangeDependencies();
     optimizationArgument =
         ModalRoute.of(context)!.settings.arguments as OptimizationArgument?;
+    facility = optimizationArgument!.facility!;
 
     // Define the variables needed
     rows = optimizationArgument?.facility?.rows ?? 0;
@@ -297,13 +302,18 @@ class _OptimizationInformationScreenState
                             width: _deviceWidth,
                             text: "Finish",
                             backgroundColor: craft_colors.Colors.primary,
-                            onPressed: () =>
-                                Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
+                            onPressed: () => {
+                              facility.optimizations = optimizations!,
+                              facility.initialScore = initialScore,
+                              // _box.add(facility.toMap()),
+                              // debugPrint("BOX: ${_box.values.firstOrNull()}"),
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                                (Route<dynamic> route) => false,
                               ),
-                              (Route<dynamic> route) => false,
-                            ),
+                            },
                           )
                         ],
                       ),

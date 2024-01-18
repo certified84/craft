@@ -3,9 +3,20 @@ import 'package:craft/screens/optimization/optimization_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:craft/screens/onboarding.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:craft/notifiers/single_notifier.dart';
 
-void main() {
-  runApp(const App(home: OnboardingScreen()));
+void main() async {
+  await Hive.initFlutter("craftify");
+  await Hive.openBox("craftify");
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<SingleNotifier>(
+          create: (_) => SingleNotifier([""]))
+    ],
+    child: const App(home: OnboardingScreen()),
+  ));
 }
 
 class App extends StatelessWidget {
@@ -22,7 +33,7 @@ class App extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      title: "Futa-Map",
+      title: "CRAFTify",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF9FAFB),

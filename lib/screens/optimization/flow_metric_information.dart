@@ -24,9 +24,16 @@ class _FlowMetricInformationScreenState
   List<List<Metric>>? flowMetrics;
   int numberOfDepartments = 0;
 
+  List<List<TextEditingController>>? controllers;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    controllers = List.generate(
+        numberOfDepartments,
+        (_) => List<TextEditingController>.filled(
+            numberOfDepartments, TextEditingController()));
 
     facility = ModalRoute.of(context)!.settings.arguments as Facility?;
     optimizationArgument.facility = facility!;
@@ -46,13 +53,6 @@ class _FlowMetricInformationScreenState
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-
-    var disabled = false;
-    for (int i = 0; i < numberOfDepartments; i++) {
-      for (int j = 0; j < numberOfDepartments; j++) {
-        disabled = disabled && flowMetrics?[i][j].metric == "";
-      }
-    }
 
     return Scaffold(
       body: Container(
@@ -97,7 +97,6 @@ class _FlowMetricInformationScreenState
                               color: craft_colors.Colors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                              fontFamily: "SpaceGrotesk",
                             ),
                           ),
                         ),
@@ -135,9 +134,14 @@ class _FlowMetricInformationScreenState
                         i == j
                             ? Container()
                             : FacilityInput(
+                                // controller: controllers?[i][j],
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
+                                ),
                                 hintText:
                                     "From ${String.fromCharCode(i + 65)} to ${String.fromCharCode(j + 65)}",
-                                autofocus: i + j == 1,
+                                autofocus: i + j == 0,
                                 onChanged: (p0) => {
                                   setState(() => flowMetrics?[i][j].metric = p0)
                                 },
@@ -149,9 +153,7 @@ class _FlowMetricInformationScreenState
                 defaultButton(
                   width: _deviceWidth,
                   text: "Next",
-                  backgroundColor: disabled
-                      ? craft_colors.Colors.primary.withOpacity(.4)
-                      : craft_colors.Colors.primary,
+                  backgroundColor: craft_colors.Colors.primary,
                   onPressed: () => {
                     setState(
                         () => optimizationArgument.flowMetrics = flowMetrics),
@@ -159,13 +161,13 @@ class _FlowMetricInformationScreenState
                       for (int j = 0; j < numberOfDepartments; j++)
                         debugPrint(
                             "Flow Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${flowMetrics?[i][j].metric}"),
-                    if (!disabled)
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        OptimizationInformationScreen.routeName,
-                        ModalRoute.withName('/'),
-                        arguments: optimizationArgument,
-                      ),
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      OptimizationInformationScreen.routeName,
+                      ModalRoute.withName('/'),
+                      arguments: optimizationArgument,
+                    ),
+                    // navigate()
                   },
                 )
               ],
@@ -174,5 +176,27 @@ class _FlowMetricInformationScreenState
         ),
       ),
     );
+  }
+
+  void navigate() {
+    for (int i = 0; i < numberOfDepartments; i++) {
+      for (int j = 0; j < numberOfDepartments; j++) {
+        flowMetrics?[i][j].metric = controllers?[i][j].text ?? "0.0";
+      }
+    }
+
+    for (int i = 0; i < numberOfDepartments; i++) {
+      for (int j = 0; j < numberOfDepartments; j++) {
+        debugPrint(
+            "Flow Metrics: ${String.fromCharCode(i + 65)}, ${String.fromCharCode(j + 65)}]: ${flowMetrics?[i][j].metric}");
+      }
+    }
+    setState(() => optimizationArgument.flowMetrics = flowMetrics);
+    // Navigator.pushNamedAndRemoveUntil(
+    //   context,
+    //   OptimizationInformationScreen.routeName,
+    //   ModalRoute.withName('/'),
+    //   arguments: optimizationArgument,
+    // );
   }
 }

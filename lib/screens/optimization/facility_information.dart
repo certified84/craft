@@ -17,6 +17,13 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
   late double _deviceHeight, _deviceWidth;
   final Facility facility = Facility();
 
+  // final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _totalAreaController = TextEditingController();
+  // final TextEditingController _lengthController = TextEditingController();
+  // final TextEditingController _breadthController = TextEditingController();
+  // final TextEditingController _rowsController = TextEditingController();
+  // final TextEditingController _columnsController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +33,13 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
+    // var disabled = (_nameController.text.isEmpty ||
+    //     _totalAreaController.text.isEmpty ||
+    //     _lengthController.text.isEmpty ||
+    //     _breadthController.text.isEmpty ||
+    //     _rowsController.text.isEmpty ||
+    //     _columnsController.text.isEmpty);
 
     var disabled = (facility.name == null ||
         facility.totalArea == null ||
@@ -113,37 +127,49 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                   child: ListView(
                     children: [
                       FacilityInput(
+                        // controller: _nameController,
                         hintText: "Enter the facility name",
                         autofocus: true,
                         onChanged: (p0) => setState(() => facility.name = p0),
                       ),
                       FacilityInput(
+                        // controller: _totalAreaController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         hintText: "Enter the total area of the facility",
-                        autofocus: true,
                         onChanged: (p0) => setState(
                             () => facility.totalArea = double.parse(p0)),
                       ),
                       FacilityInput(
+                        // controller: _lengthController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         hintText: "Enter the length of each department",
-                        autofocus: true,
                         onChanged: (p0) =>
                             setState(() => facility.length = double.parse(p0)),
                       ),
                       FacilityInput(
+                        // controller: _breadthController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         hintText: "Enter the breadth of each department",
-                        autofocus: true,
                         onChanged: (p0) =>
                             setState(() => facility.breadth = double.parse(p0)),
                       ),
                       FacilityInput(
+                        // controller: _rowsController,
+                        keyboardType: TextInputType.number,
                         hintText: "Enter the number of rows",
-                        autofocus: true,
                         onChanged: (p0) =>
                             setState(() => facility.rows = int.parse(p0)),
                       ),
                       FacilityInput(
+                        // controller: _columnsController,
+                        keyboardType: TextInputType.number,
                         hintText: "Enter the number of columns",
-                        autofocus: true,
                         onChanged: (p0) =>
                             setState(() => facility.columns = int.parse(p0)),
                       ),
@@ -157,21 +183,31 @@ class _FacilityInformationScreenState extends State<FacilityInformationScreen> {
                   backgroundColor: disabled
                       ? craft_colors.Colors.primary.withOpacity(.4)
                       : craft_colors.Colors.primary,
-                  onPressed: () => {
-                    if (!disabled)
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        FlowMetricInformationScreen.routeName,
-                        ModalRoute.withName('/'),
-                        arguments: facility,
-                      ),
-                  },
+                  onPressed: () => {if (!disabled) navigate()},
                 )
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  void navigate() {
+    // facility.name = _nameController.text;
+    // facility.totalArea = double.parse(_totalAreaController.text);
+    // facility.length = double.parse(_lengthController.text);
+    // facility.breadth = double.parse(_breadthController.text);
+    // facility.rows = int.parse(_rowsController.text);
+    // facility.columns = int.parse(_columnsController.text);
+
+    debugPrint("$facility");
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      FlowMetricInformationScreen.routeName,
+      ModalRoute.withName('/'),
+      arguments: facility,
     );
   }
 }

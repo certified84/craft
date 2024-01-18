@@ -1,7 +1,7 @@
 import 'package:craft/data/model/optimization.dart';
 
 class Facility {
-  String? id;
+  int? id;
   String? name;
   double? totalArea;
   double? length;
@@ -30,6 +30,10 @@ class Facility {
       id: map['id'],
       name: map['name'],
       totalArea: map['totalArea'],
+      length: map['length'],
+      breadth: map['breadth'],
+      rows: map['rows'],
+      columns: map['columns'],
       initialScore: map['initialScore'],
       optimizedScore: map['optimizedScore'],
       optimizations: map['optimizations'],
@@ -47,9 +51,14 @@ class Facility {
       'optimizations': optimizations
     };
   }
+
+  @override
+  String toString() =>
+      "Facility: $name, $totalArea, $length, $breadth, $rows, $columns, $initialScore, $optimizedScore, $optimizations";
 }
 
 class Optimization {
+  int? id;
   double score;
   String i;
   String j;

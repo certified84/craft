@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart' as craft_colors;
 
 class FacilityInput extends StatelessWidget {
-  const FacilityInput(
-      {super.key,
-      this.hintText,
-      this.value,
-      this.autofocus,
-      this.onChanged,
-      this.onEditingComplete});
+  const FacilityInput({
+    super.key,
+    this.hintText,
+    this.value,
+    this.autofocus = false,
+    this.onChanged,
+    this.onEditingComplete,
+    this.controller,
+    this.keyboardType,
+  });
   final String? hintText;
   final String? value;
   final Function(String)? onChanged;
   final void Function()? onEditingComplete;
   final bool? autofocus;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,8 @@ class FacilityInput extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: TextFormField(
+        keyboardType: keyboardType,
+        controller: controller,
         style: const TextStyle(
           fontFamily: "SpaceGrotesk",
         ),
