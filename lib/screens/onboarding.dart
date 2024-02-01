@@ -43,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const SvgPicture(
-                    AssetBytesLoader('assets/svgs/craft_logo.svg.vec'),
+                    AssetBytesLoader('assets/svgs/flo_logo.svg.vec'),
                     semanticsLabel: 'Craft Logo',
                   ),
                   SizedBox(
